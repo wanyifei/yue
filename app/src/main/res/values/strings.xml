@@ -29,4 +29,10 @@
         <item>This is description 10</item>
     </string-array>
 
+    <string-array name="signup_gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>
