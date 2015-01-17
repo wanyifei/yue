@@ -59,7 +59,8 @@
             android:layout_weight="1"
             android:background="@drawable/welcome_grid"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"/>
+            android:layout_marginRight="50dp"
+            android:paddingStart="8dp" />
     </LinearLayout>
 
     <LinearLayout
