@@ -16,8 +16,6 @@ public class activityScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
 
-        System.out.println("Here!");
-
         ImageButton toFoodScreen = (ImageButton) findViewById(R.id.homepage_food);
         ImageButton toMovieScreen = (ImageButton) findViewById(R.id.homepage_movie);
         ImageButton toSportScreen = (ImageButton) findViewById(R.id.homepage_sport);

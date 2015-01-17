@@ -28,5 +28,13 @@
         <item>This is description 9</item>
         <item>This is description 10</item>
     </string-array>
+    <string name="category_label">Category</string>
+    <string-array name="category_list">
+        <item>food</item>
+        <item>sports</item>
+        <item>study</item>
+        <item>movie</item>
+        <item>other</item>
+    </string-array>
 
 </resources>
