@@ -3,9 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <ImageButton
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/imageView2"
-        android:layout_gravity="center_horizontal" />
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_food"
+        android:id="@+id/homepage_food" />
+
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_sport"
+        android:id="@+id/homepage_sport" />
+
+
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_study"
+        android:id="@+id/homepage_study" />
+
+
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_movie"
+        android:id="@+id/homepage_movie" />
+
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_other"
+        android:id="@+id/homepage_other" />
+
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/homepage_pic_post"
+        android:id="@+id/homepage_post" />
 </LinearLayout>

@@ -83,7 +83,8 @@
             android:background="@drawable/welcome_grid"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:password="false" />
+            android:password="false"
+            android:paddingStart="8dp" />
 
         </LinearLayout>
 
