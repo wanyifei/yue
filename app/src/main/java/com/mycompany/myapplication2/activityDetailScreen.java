@@ -19,6 +19,7 @@ public class activityDetailScreen extends Activity {
 
         TextView name = (TextView) findViewById(R.id.fill_activity_name);
         TextView destination = (TextView) findViewById(R.id.fill_activity_destination);
+        TextView title = (TextView) findViewById(R.id.fill_activity_title);
         TextView depatureLocation = (TextView) findViewById(R.id.fill_activity_depature_location);
         TextView depatureTime = (TextView) findViewById(R.id.fill_activity_depature_time);
         TextView remark = (TextView) findViewById(R.id.fill_activity_remark);

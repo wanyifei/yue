@@ -2,6 +2,7 @@ package com.mycompany.myapplication2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,8 +51,13 @@ public class listViewScreen extends Activity {
         @Override
         public void onItemClick(AdapterView<?> adapter, View v, int position, long a){
 
-            System.out.println("HI!");
+            Intent i = getIntent();
+
+            System.out.println(i.getStringExtra("type"));
             System.out.println(a);
+
+            Intent nextScreen = new Intent(getApplicationContext(), mapViewScreen.class);
+            startActivity(nextScreen);
 
         }
     }

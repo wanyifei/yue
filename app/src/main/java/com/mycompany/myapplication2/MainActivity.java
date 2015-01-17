@@ -2,9 +2,14 @@ package com.mycompany.myapplication2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,10 +30,10 @@ public class MainActivity extends Activity {
         inputName = (EditText) findViewById(R.id.welcome_button_username);
         inputPassword = (EditText) findViewById(R.id.welcome_button_password);
         ImageButton toSingupScreen = (ImageButton) findViewById(R.id.welcome_button_signup);
-        ImageButton toHomepgeScreen = (ImageButton) findViewById(R.id.welcome_button_login);
+        ImageButton toHomepageScreen = (ImageButton) findViewById(R.id.welcome_button_login);
 
         toSingupScreen.setOnClickListener(new singupOnclick());
-        toHomepgeScreen.setOnClickListener(new loginOnclick());
+        toHomepageScreen.setOnClickListener(new loginOnclick());
     }
 
     private class singupOnclick implements View.OnClickListener {
@@ -53,6 +58,5 @@ public class MainActivity extends Activity {
             alert.show();
             Log.e("n", inputName.getText() + "." + inputPassword.getText());
         }
-
     }
 }
