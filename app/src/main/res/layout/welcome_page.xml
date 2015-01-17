@@ -50,13 +50,14 @@
             android:ems="10"
             android:id="@+id/welcome_button_username"
             android:layout_gravity="center_horizontal"
-            android:hint=" User Name"
+            android:hint="User Name"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="1"
             android:background="@drawable/welcome_grid"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp" />
+            android:layout_marginRight="50dp"
+            android:paddingStart="8dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,13 +73,15 @@
             android:ems="10"
             android:id="@+id/welcome_button_password"
             android:layout_gravity="center_horizontal"
-            android:hint=" Password"
+            android:hint="Password"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="1"
             android:background="@drawable/welcome_grid"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp" />
+            android:layout_marginRight="50dp"
+            android:paddingStart="8dp"
+            android:password="false" />
 
         </LinearLayout>
 
