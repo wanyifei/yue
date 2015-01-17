@@ -20,9 +20,12 @@ import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,11 +121,39 @@ public class signupScreen extends Activity {
         dialog.show();
     }
 
+    private String[] categories;
+    private Spinner spinner;
+    String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
+
+        categories = getResources().getStringArray(R.array.category_list);
+        //imgs = getResources().obtainTypedArray(R.array.countries_flag_list);
+
+        //image = (ImageView) findViewById(R.id.country_image);
+        spinner = (Spinner) findViewById(R.id.signup_gender);
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                gender = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
 
         username = (TextView) findViewById(R.id.signup_text_username);
         password = (TextView) findViewById(R.id.signup_text_username);
@@ -142,6 +173,7 @@ public class signupScreen extends Activity {
                 nameValuePairs.add(new BasicNameValuePair("destination", password.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("depatureLocation", phone.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("date", email.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("gender", gender));
 
                 try{
                     final HttpClient httpclient = new DefaultHttpClient();

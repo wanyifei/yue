@@ -1,6 +1,7 @@
 package com.mycompany.myapplication2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -18,5 +19,11 @@ public class profileScreen extends Activity {
         TextView email = (TextView) findViewById(R.id.profile_email);
         TextView gender = (TextView) findViewById(R.id.profile_gender);
 
+        Intent i = getIntent();
+
+        username.setText(i.getStringExtra("username"));
+        phone.setText(i.getStringExtra("phone"));
+        email.setText(i.getStringExtra("email"));
+        gender.setText(i.getStringExtra("gender"));
     }
 }
