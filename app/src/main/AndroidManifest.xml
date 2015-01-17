@@ -25,6 +25,7 @@
         <activity android:name=".mapViewScreen"></activity>
         <activity android:name=".activityDetailScreen"></activity>
         <activity android:name=".activityScreen"></activity>
+        <activity android:name=".signupScreen"></activity>
         <activity
             android:name=".postScreen"
             android:label="@string/app_name" >

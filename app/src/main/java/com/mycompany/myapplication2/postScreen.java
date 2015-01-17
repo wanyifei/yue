@@ -3,11 +3,13 @@ package com.mycompany.myapplication2;
 import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -30,6 +32,15 @@ public class postScreen extends Activity {
     private String[] categories;
     private Spinner spinner;
     //private TypedArray imgs;
+
+    EditText title;
+    EditText destination;
+    EditText depatureLocation;
+    EditText date;
+    EditText month;
+    EditText hour;
+    EditText minute;
+    TextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +73,44 @@ public class postScreen extends Activity {
             }
         });
 
-        EditText title = (EditText) findViewById(R.id.edit_title);
-        EditText destination = (EditText) findViewById(R.id.edit_destination);
-        EditText depatureLocation = (EditText) findViewById(R.id.edit_departure_location);
-        EditText date = (EditText) findViewById(R.id.edit_date);
-        EditText month = (EditText) findViewById(R.id.edit_month);
-        EditText hour = (EditText) findViewById(R.id.edit_hour);
-        EditText minute = (EditText) findViewById(R.id.edit_minute);
-        TextView description = (TextView) findViewById(R.id.description);
+        title = (EditText) findViewById(R.id.edit_title);
+        destination = (EditText) findViewById(R.id.edit_destination);
+        depatureLocation = (EditText) findViewById(R.id.edit_departure_location);
+        date = (EditText) findViewById(R.id.edit_date);
+        month = (EditText) findViewById(R.id.edit_month);
+        hour = (EditText) findViewById(R.id.edit_hour);
+        minute = (EditText) findViewById(R.id.edit_minute);
+        description = (TextView) findViewById(R.id.description);
 
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("title", title.getText().toString()));
-        nameValuePairs.add(new BasicNameValuePair("destination", destination.getText().toString()));
-        nameValuePairs.add(new BasicNameValuePair("depatureLocation", depatureLocation.getText().toString()));
-        nameValuePairs.add(new BasicNameValuePair("depatureTime", depatureTime.getText().toString()));
-        nameValuePairs.add(new BasicNameValuePair("description", description.getText().toString()));
+        Time now = new Time();
+        now.setToNow();
 
-        try{
-            HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        }catch(Exception e){
-            Log.e("log_tag", "Error in http connection " + e.toString());
-        }
+        date.setText(now.monthDay);
+        month.setText(now.month);
+        hour.setText(now.hour);
+        minute.setText(now.minute);
+
+        Button sendPost = (Button) findViewById(R.id.button);
+        sendPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("title", title.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("destination", destination.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("depatureLocation", depatureLocation.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("date", date.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("month", month.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("hour", hour.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("minute", minute.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("description", description.getText().toString()));
+
+                try{
+                    HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                }catch(Exception e){
+                    Log.e("log_tag", "Error in http connection " + e.toString());
+                }
+            }
+        });
     }
 }

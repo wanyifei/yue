@@ -64,11 +64,8 @@ public class activityDetailScreen extends Activity {
             nameValuePairs.add(new BasicNameValuePair("postID",Integer.toString(postID)));
 
             try{
-                HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity entity = response.getEntity();
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }

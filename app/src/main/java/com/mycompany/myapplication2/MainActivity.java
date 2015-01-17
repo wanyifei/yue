@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 
     private class singupOnclick implements View.OnClickListener {
         public void onClick(View v) {
-            Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+            Intent nextScreen = new Intent(getApplicationContext(), signupScreen.class);
             startActivity(nextScreen);
         }
     }
