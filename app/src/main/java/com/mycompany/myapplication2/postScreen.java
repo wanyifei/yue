@@ -104,7 +104,17 @@ public class postScreen extends Activity {
 
             @Override
             public void onClick(View v) {
-                if (Integer.getInteger(date.getText().toString())<=0 || Integer.getInteger(date.getText().toString())>=32
+                if (date.getText()==null || month.getText()==null || hour.getText()==null || minute.getText()==null) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
+                    alert.setTitle("ERROR");
+                    alert.setMessage("Time invalid!");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick (DialogInterface dialog, int id) {
+                        }
+                    });
+                    alert.show();
+                }
+                else if (Integer.getInteger(date.getText().toString())<=0 || Integer.getInteger(date.getText().toString())>=32
                     || Integer.getInteger(month.getText().toString())<=0 ||
                         Integer.getInteger(month.getText().toString())>=13 ||
                         Integer.getInteger(hour.getText().toString())<0 ||
@@ -162,6 +172,7 @@ public class postScreen extends Activity {
 
                 int finish = 0;
                 try{
+                    Log.e("log_tag", "string "+result);
                     JSONArray jArray = new JSONArray(result);
                     for(int i=0;i<jArray.length();i++){
                         JSONObject json_data = jArray.getJSONObject(i);

@@ -10,10 +10,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -87,30 +89,10 @@ public class signupScreen extends Activity {
 
                         int x = bitmapimg.getWidth();
                         int y = bitmapimg.getHeight();
-                        Bitmap output = Bitmap.createBitmap(bitmapimg.getWidth(),
-                                bitmapimg.getHeight(), Bitmap.Config.ARGB_8888);
-                        Canvas canvas = new Canvas(output);
 
-                        final int color = 0xff424242;
-                        final Paint paint = new Paint();
-                        final Rect rect = new Rect(0, 0, bitmapimg.getWidth(),
-                                bitmapimg.getHeight());
-
-                        paint.setAntiAlias(true);
-                        canvas.drawARGB(0, 0, 0, 0);
-                        paint.setColor(color);
-                        bitmapimg.setHeight(bitmapimg.getWidth());
-                        canvas.drawCircle(bitmapimg.getWidth() / 5,
-                                bitmapimg.getHeight() / 5, bitmapimg.getWidth() / 5, paint);
-                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-                        canvas.drawBitmap(bitmapimg, rect, rect, paint);
-                        //imageView.setImageBitmap(output);
-
-                        System.out.println("Image Upload!");
-                        output.setHeight(output.getHeight()/100);
-                        output.setWidth(output.getWidth()/100);
-                        uploadImage.setImageBitmap(output);
-                        uploadImage.setImageDrawable(imageView.getDrawable());
+//                        uploadImage.setImageBitmap(output);
+                        uploadImage.setImageDrawable(putOverlay(BitmapFactory.decodeResource(getResources(),
+                                R.drawable.default_user_photo), bitmapimg));
                     } else {
                         alert();
                     }
@@ -123,6 +105,14 @@ public class signupScreen extends Activity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public BitmapDrawable putOverlay(Bitmap bitmap, Bitmap overlay) {
+        Bitmap b = Bitmap.createScaledBitmap(bitmap, overlay.getWidth()-50, overlay.getHeight()-50,true);
+        Canvas canvas = new Canvas(b);
+        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+        canvas.drawBitmap(overlay, 0, 0, paint);
+        return new BitmapDrawable(b);
     }
 
     private void alert() {

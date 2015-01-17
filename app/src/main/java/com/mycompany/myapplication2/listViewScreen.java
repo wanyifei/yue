@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,11 +56,20 @@ public class listViewScreen extends Activity {
         public int minute;
         public double longitude;
         public double latitude;
-        public String postName;
         public String title;
         public String destinationLocation;
         public String description;
+        public String departure;
     }
+
+    String[] titles;
+    String[] names;
+    String[] destinations;
+    String[] times;
+    int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
+            R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
+            R.drawable.img_thing, R.drawable.weenie};
+
 
     LocationManager locationManager;
     static Location currentLocation;
@@ -85,10 +95,10 @@ public class listViewScreen extends Activity {
         public int compare(Object o1,Object o2){
             Post p1 = (Post)o1;
             Post p2 = (Post)o2;
-            double dis1 = (p1.latitude - currentLocation.getLatitude())*(p1.latitude - currentLocation.getLatitude()) +
-                    (p1.longitude - currentLocation.getLatitude())*(p1.longitude - currentLocation.getLatitude());
-            double dis2 = (p2.latitude - currentLocation.getLatitude())*(p2.latitude - currentLocation.getLatitude()) +
-                    (p2.longitude - currentLocation.getLatitude())*(p2.longitude - currentLocation.getLatitude());
+            double dis1 = (p1.latitude - 0)*(p1.latitude - 0) +
+                    (p1.longitude - 0)*(p1.longitude - 0);
+            double dis2 = (p2.latitude - 0)*(p2.latitude - 0) +
+                    (p2.longitude - 0)*(p2.longitude - 0);
             return dis1 > dis2 ? 1 : 0;
         }
     }
@@ -110,13 +120,14 @@ public class listViewScreen extends Activity {
 
         String result = "";
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("type", type));
+        nameValuePairs.add(new BasicNameValuePair("category", type));
 
         try{
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
              HttpClient httpclient = new DefaultHttpClient();
-             HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+             HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
+                     "/activity/get_activities");
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                         HttpResponse response = httpclient.execute(httppost);
                         HttpEntity entity = response.getEntity();
@@ -144,94 +155,115 @@ public class listViewScreen extends Activity {
                 JSONObject json_data = jArray.getJSONObject(j);
                 Post newPost = new Post();
                 newPost.id = json_data.getInt("id");
-                newPost.postName = json_data.getString("postName");
                 newPost.title = json_data.getString("title");
-                newPost.destinationLocation = json_data.getString("destinationLocation");
-                newPost.date = json_data.getInt("date");
-                newPost.month = json_data.getInt("month");
-                newPost.hour = json_data.getInt("hour");
-                newPost.minute = json_data.getInt("minute");
+                newPost.destinationLocation = json_data.getString("dest_addr");
+                newPost.date = json_data.getInt("time_day");
+                newPost.month = json_data.getInt("time_month");
+                newPost.hour = json_data.getInt("time_hour");
+                newPost.minute = json_data.getInt("time_minute");
                 newPost.description = json_data.getString("description");
-                newPost.latitude = json_data.getDouble("latitude");
-                newPost.longitude = json_data.getDouble("longitude");
+                newPost.latitude = json_data.getDouble("depart_lat");
+                newPost.longitude = json_data.getDouble("depart_lgt");
+                newPost.departure=json_data.getString("depart_addr");
                 posts.add(newPost);
             }
         }catch(JSONException e){
             Log.e("log_tag", "Error parsing data "+e.toString());
         }
 
-        sort(0);
+        sort(1);
 
         list = (ListView) findViewById(R.id.listView);
-        //listView adapter = new listView(this);
-//        list.setAdapter(adapter);
-//        listViewOnclick onclickEvent = new listViewOnclick();
-//        list.setOnItemClickListener(onclickEvent);
+        listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
+        list.setAdapter(adapter);
+
+        listViewOnclick onclickEvent = new listViewOnclick();
+        list.setOnItemClickListener(onclickEvent);
     }
 
     private void sort(int sortby) {
         if (sortby == 0) {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+           // currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             Collections.sort(posts, new postSort0());
         } else if (sortby == 1) {
             Collections.sort(posts, new postSort1());
         }
-    }
-
-    private class listViewOnclick implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> adapter, View v, int position, long a){
-            Intent nextScreen = new Intent(getApplicationContext(), activityDetailScreen.class);
-            Post selectPost = posts.get(position);
-            nextScreen.putExtra("postID", selectPost.id);
-            nextScreen.putExtra("postName", selectPost.postName);
-            nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
-            nextScreen.putExtra("date", selectPost.date);
-            nextScreen.putExtra("month", selectPost.month);
-            nextScreen.putExtra("hour", selectPost.hour);
-            nextScreen.putExtra("minute", selectPost.minute);
-            nextScreen.putExtra("title", selectPost.title);
-            nextScreen.putExtra("description", selectPost.description);
-            startActivity(nextScreen);
+        titles = new String[posts.size()];
+        names = new String[posts.size()];
+        destinations = new String[posts.size()];
+        times = new String[posts.size()];
+        for (int i=0; i<posts.size(); i++) {
+            titles[i]=posts.get(i).title;
+            destinations[i]=posts.get(i).destinationLocation;
+            names[i] = posts.get(i).departure;
+            times[i]=posts.get(i).date+"/"+posts.get(i).month+" "+posts.get(i).hour+":"+posts.get(i).minute;
         }
     }
 
-//    class listView extends ArrayAdapter<String>
-//    {
-//        Context context;
-//        int[] images;
-//        String[] title;
-//        String[] postName;
-//        String[] destinationLocation;
-//        String[] destinationTime;
+    private class listViewOnclick implements AdapterView.OnItemClickListener {
+        boolean isOnImg=false;
+        @Override
+        public void onItemClick(AdapterView<?> adapter, View v, int position, long a){
+            final Post selectPost = posts.get(position);
 
-//        listView(Context c, String[] titles)
-//        {
-//            super(c, R.layout.single_row, R.id.textView, titles);
-//            this.context = c;
-//            this.images = imgs;
-//            this.titleArray = titles;
-//            this.descriptionArray = desc;
-//        }
+                System.out.println("text");
+                Intent nextScreen = new Intent(getApplicationContext(), activityDetailScreen.class);
+                nextScreen.putExtra("postID", Integer.toString(selectPost.id));
+            nextScreen.putExtra("type", type);
+                nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
+                nextScreen.putExtra("depatureLocation", selectPost.departure);
+                nextScreen.putExtra("date", Integer.toString(selectPost.date));
+                nextScreen.putExtra("month", Integer.toString(selectPost.month));
+                nextScreen.putExtra("hour", Integer.toString(selectPost.hour));
+                nextScreen.putExtra("minute", Integer.toString(selectPost.minute));
+                nextScreen.putExtra("title", selectPost.title);
+                nextScreen.putExtra("description", selectPost.description);
+                startActivity(nextScreen);
 
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//
-//            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            View row = inflater.inflate(R.layout.single_row, parent, false);
-//
-//            ImageView myImage = (ImageView) row.findViewById(R.id.imageView);
-//            TextView myTitle = (TextView) row.findViewById(R.id.textView);
-//            TextView myDescription = (TextView) row.findViewById(R.id.textView2);
-//
-//            myImage.setImageResource(images[position]);
-//            myTitle.setText(titleArray[position]);
-//            myDescription.setText(descriptionArray[position]);
-//
-//            return row;
-//        }
+        }
+    }
+
+    class listViewAdapter extends ArrayAdapter<String>
+    {
+        Context context;
+        int[] images;
+        String[] titleArray;
+        String[] nameArray;
+        String[] destinationArray;
+        String[] timeArray;
+
+        listViewAdapter(Context c, String[] titles, int[] imgs, String[] names, String[] dest, String[] times)
+        {
+            super(c, R.layout.single_row, R.id.list_activity_title, titles);
+            this.context = c;
+            this.images = imgs;
+            this.titleArray = titles;
+            this.nameArray = names;
+            this.destinationArray = dest;
+            this.timeArray = times;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = inflater.inflate(R.layout.single_row, parent, false);
+
+            ImageView myImage = (ImageView) row.findViewById(R.id.imageView);
+            TextView myTitle = (TextView) row.findViewById(R.id.list_activity_title);
+            TextView myName = (TextView) row.findViewById(R.id.list_activity_name);
+            TextView myDestination = (TextView) row.findViewById(R.id.list_activity_destination);
+            TextView myTime = (TextView) row.findViewById(R.id.list_activity_time);
+
+            myImage.setImageResource(images[position]);
+            myTitle.setText(titleArray[position]);
+            myName.setText(nameArray[position]);
+            myDestination.setText(destinationArray[position]);
+            myTime.setText(timeArray[position]);
+
+            return row;
+        }
 
 
-//    }
+    }
 }
