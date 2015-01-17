@@ -1,0 +1,213 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity_Youjia">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="1"
+        android:background="@drawable/wallpaper2_new">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="237dp"
+            android:layout_weight="0.39"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="107dp"
+                android:layout_height="303dp"
+                android:layout_marginLeft="20dp"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Category"
+                    android:id="@+id/activity_category"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Title"
+                    android:id="@+id/activity_title"
+                    android:layout_marginTop="23dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Destination"
+                    android:id="@+id/activity_destination"
+                    android:layout_marginTop="23dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Departure Location"
+                    android:id="@+id/activity_departure_location"
+                    android:layout_marginTop="23dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Departure Time"
+                    android:id="@+id/activity_departure_time"
+                    android:layout_marginTop="23dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="299dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:id="@+id/category_spinner"
+                        android:prompt="@string/category_label"
+                        android:background="#ffffffff"
+                        android:layout_marginTop="13dp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/edit_title"
+                        android:layout_marginTop="12dp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/edit_destination"
+                        android:layout_marginTop="10dp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:id="@+id/edit_departure_location"
+                        android:layout_marginTop="13dp" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="20dp">
+
+                        <EditText
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/edit_date"
+                            android:background="#ffffffff" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="/"
+                            android:id="@+id/textView3"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="35dp"
+                            android:layout_marginTop="5dp" />
+
+                        <EditText
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/edit_month"
+                            android:background="#ffffffff" />
+
+                        <EditText
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/edit_hour"
+                            android:layout_marginLeft="20dp"
+                            android:background="#ffffffff" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:id="@+id/textView4"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="35dp"
+                            android:layout_marginTop="5dp"/>
+
+                        <EditText
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/edit_minute"
+                            android:background="#ffffffff"
+                            android:layout_marginLeft="3dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:scrollbarSize="120dp"
+            android:layout_height="110dp"
+            android:layout_weight="0.60">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Description"
+                android:id="@+id/description"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/editText"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:background="#9affffff"
+                android:layout_marginRight="10dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="83dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Post"
+                android:textSize="30dp"
+                android:id="@+id/button"
+                android:layout_gravity="center_horizontal"
+                android:background="#ffa2c8ff"
+                android:layout_marginTop="20dp"
+                android:textColor="#ff4469ff"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
