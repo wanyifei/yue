@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
@@ -66,7 +67,6 @@ public class MainActivity extends Activity {
 
     private class loginOnclick implements View.OnClickListener {
         InputStream is = null;
-        boolean received = false;
 
         @Override
         public void onClick(View v) {
@@ -74,23 +74,25 @@ public class MainActivity extends Activity {
 
             String result = "";
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("username", inputName.toString()));
-            nameValuePairs.add(new BasicNameValuePair("password",inputPassword.toString()));
+            nameValuePairs.add(new BasicNameValuePair("username", inputName.getText().toString()));
+            nameValuePairs.add(new BasicNameValuePair("password",inputPassword.getText().toString()));
 
             try{
-                final HttpClient httpclient = new DefaultHttpClient();
-                final HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php/" +
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                 HttpClient httpclient = new DefaultHttpClient();
+                 HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php/" +
                         "user/log_in");
+                Log.e("log_tag", nameValuePairs.toString());
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity entity = response.getEntity();
                 is = entity.getContent();
-                received = response.getStatusLine().getStatusCode()==200;
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }
+            String info="";
             int correct = 0;
-            if (received) {
                 try{
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
                     StringBuilder sb = new StringBuilder();
@@ -104,34 +106,29 @@ public class MainActivity extends Activity {
                     Log.e("log_tag", "Error converting result "+e.toString());
                 }
 
+
+
                 try{
+                    System.out.println("return" + " " + result);
                     JSONArray jArray = new JSONArray(result);
                     for(int i=0;i<jArray.length();i++){
                         JSONObject json_data = jArray.getJSONObject(i);
                         correct = json_data.getInt("is_successful");
+                        if (correct==0) info = json_data.getString("fail_reason");
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
                 }
 
-            }
-            if (!received) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle("ERROR");
-                alert.setMessage("Connection failed!");
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick (DialogInterface dialog, int id) {
-                    }
-                });
-                alert.show();
-            }
-            else if (correct == 1) {
+
+
+            if (correct == 1) {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 startActivity(nextScreen);
             } else {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 alert.setTitle("ERROR");
-                alert.setMessage("Unrecognized username or\nIncorrect password!");
+                alert.setMessage(info);
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick (DialogInterface dialog, int id) {
                         Toast.makeText (MainActivity.this, "Success", Toast.LENGTH_SHORT) .show();

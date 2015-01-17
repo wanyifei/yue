@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -64,7 +65,6 @@ public class activityDetailScreen extends Activity {
 
     private class joinOnclick implements View.OnClickListener {
         InputStream is = null;
-        boolean received = false;
 
         public void onClick(View v) {
             String result = "";
@@ -72,31 +72,20 @@ public class activityDetailScreen extends Activity {
             nameValuePairs.add(new BasicNameValuePair("postID",Integer.toString(postID)));
 
             try{
-                final HttpClient httpclient = new DefaultHttpClient();
-                final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                 HttpClient httpclient = new DefaultHttpClient();
+                 HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                new CountDownTimer(5000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        try {
                             HttpResponse response = httpclient.execute(httppost);
                             HttpEntity entity = response.getEntity();
                             is = entity.getContent();
-                        } catch(Exception e) {
-                            Log.e("log_tag", "Error in http connection " + e.toString());
-                        }
-                        if (is!=null) {
-                            received = true;
-                            cancel();
-                        }
-                    }
-                    public void onFinish() {
-                    }
-                }.start();
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }
 
             try{
+
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
                 StringBuilder sb = new StringBuilder();
                 String line = null;
@@ -120,7 +109,7 @@ public class activityDetailScreen extends Activity {
                 Log.e("log_tag", "Error parsing data "+e.toString());
             }
 
-            if (finish == 1 && received) {
+            if (finish == 1 ) {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 startActivity(nextScreen);
             } else {

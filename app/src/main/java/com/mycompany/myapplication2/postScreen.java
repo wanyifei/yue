@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
@@ -92,56 +93,56 @@ public class postScreen extends Activity {
         month = (EditText) findViewById(R.id.edit_month);
         hour = (EditText) findViewById(R.id.edit_hour);
         minute = (EditText) findViewById(R.id.edit_minute);
-        description = (TextView) findViewById(R.id.description);
+        description = (TextView) findViewById(R.id.editText);
 
-        Time now = new Time();
-        now.setToNow();
 
-        date.setText(now.monthDay);
-        month.setText(now.month);
-        hour.setText(now.hour);
-        minute.setText(now.minute);
+
 
         Button sendPost = (Button) findViewById(R.id.button);
         sendPost.setOnClickListener(new View.OnClickListener() {
-            boolean received = false;
             InputStream is = null;
 
             @Override
             public void onClick(View v) {
+                if (Integer.getInteger(date.getText().toString())<=0 || Integer.getInteger(date.getText().toString())>=32
+                    || Integer.getInteger(month.getText().toString())<=0 ||
+                        Integer.getInteger(month.getText().toString())>=13 ||
+                        Integer.getInteger(hour.getText().toString())<0 ||
+                        Integer.getInteger(hour.getText().toString())>=25 ||
+                        Integer.getInteger(minute.getText().toString())<0 ||
+                        Integer.getInteger(minute.getText().toString())>=61) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
+                    alert.setTitle("ERROR");
+                    alert.setMessage("Time invalid!");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick (DialogInterface dialog, int id) {
+                        }
+                    });
+                    alert.show();
+                }
+
                 String result = "";
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("title", title.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("destination", destination.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("depatureLocation", depatureLocation.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("date", date.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("month", month.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("hour", hour.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("minute", minute.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("dest_addr", destination.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("depart_addr", depatureLocation.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("time_day", date.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("time_month", month.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("time_hour", hour.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("time_minute", minute.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("description", description.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("type", type));
+                nameValuePairs.add(new BasicNameValuePair("category", type));
 
                 try{
-                    final HttpClient httpclient = new DefaultHttpClient();
-                    final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                     HttpClient httpclient = new DefaultHttpClient();
+                     HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/" +
+                             "index.php/activity/post_activity");
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                    new CountDownTimer(5000, 1000) {
-                        public void onTick(long millisUntilFinished) {
-                            try {
                                 HttpResponse response = httpclient.execute(httppost);
                                 HttpEntity entity = response.getEntity();
                                 is = entity.getContent();
-                            } catch(Exception e) {
-                                Log.e("log_tag", "Error in http connection " + e.toString());
-                            }
-                            if (is!=null) {
-                                received = true;
-                                cancel();
-                            }
-                        }
-                        public void onFinish() {
-                        }
-                    }.start();
                 }catch(Exception e){
                     Log.e("log_tag", "Error in http connection " + e.toString());
                 }
@@ -164,13 +165,13 @@ public class postScreen extends Activity {
                     JSONArray jArray = new JSONArray(result);
                     for(int i=0;i<jArray.length();i++){
                         JSONObject json_data = jArray.getJSONObject(i);
-                        finish = json_data.getInt("finish");
+                        finish = json_data.getInt("is_successful");
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
                 }
 
-                if (finish == 1 && received) {
+                if (finish == 1) {
                     Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                     startActivity(nextScreen);
                 } else {
@@ -179,7 +180,6 @@ public class postScreen extends Activity {
                     alert.setMessage("Connection failed!");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick (DialogInterface dialog, int id) {
-                            Toast.makeText(postScreen.this, "Success", Toast.LENGTH_SHORT) .show();
                         }
                     });
                     alert.show();

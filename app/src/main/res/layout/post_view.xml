@@ -110,9 +110,11 @@
                         android:layout_marginTop="20dp">
 
                         <EditText
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:inputType="phone"
                             android:id="@+id/edit_date"
+                            android:hint="dd"
                             android:background="#ffffffff" />
 
                         <TextView
@@ -126,16 +128,20 @@
                             android:layout_marginTop="5dp" />
 
                         <EditText
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:inputType="phone"
                             android:id="@+id/edit_month"
+                            android:hint="mm"
                             android:background="#ffffffff" />
 
                         <EditText
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
                             android:id="@+id/edit_hour"
-                            android:layout_marginLeft="20dp"
+                            android:inputType="phone"
+                            android:hint="hh"
+                            android:layout_marginLeft="13dp"
                             android:background="#ffffffff" />
 
                         <TextView
@@ -148,9 +154,11 @@
                             android:layout_marginTop="5dp"/>
 
                         <EditText
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:inputType="phone"
                             android:id="@+id/edit_minute"
+                            android:hint="min"
                             android:background="#ffffffff"
                             android:layout_marginLeft="3dp" />
                     </LinearLayout>

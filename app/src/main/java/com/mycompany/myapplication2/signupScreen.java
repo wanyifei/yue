@@ -17,6 +17,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -58,17 +59,19 @@ public class signupScreen extends Activity {
     TextView phone;
     TextView email;
 
+    ImageButton uploadImage;
+
     private ImageView imageView;
 
     private String picPath = null;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
+        if (true) {
             Uri uri = data.getData();
             try {
                 String[] pojo = { MediaStore.Images.Media.DATA };
-
+                System.out.println("1");
                 Cursor cursor = managedQuery(uri, pojo, null, null, null);
                 if (cursor != null) {
                     ContentResolver cr = this.getContentResolver();
@@ -76,26 +79,38 @@ public class signupScreen extends Activity {
                             .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                     cursor.moveToFirst();
                     String path = cursor.getString(column_index);
-                    if (path.endsWith("jpg") || path.endsWith("png")) {
+                    System.out.println("2");
+                    if (true) {
                         picPath = path;
-                        Bitmap bitmap = BitmapFactory.decodeStream(cr
+                        Bitmap bitmapimg = BitmapFactory.decodeStream(cr
                                 .openInputStream(uri));
 
-                        int x = bitmap.getWidth();
-                        int y = bitmap.getHeight();
-                        Bitmap output = Bitmap.createBitmap(x,
-                                y, Bitmap.Config.ARGB_8888);
+                        int x = bitmapimg.getWidth();
+                        int y = bitmapimg.getHeight();
+                        Bitmap output = Bitmap.createBitmap(bitmapimg.getWidth(),
+                                bitmapimg.getHeight(), Bitmap.Config.ARGB_8888);
                         Canvas canvas = new Canvas(output);
+
                         final int color = 0xff424242;
                         final Paint paint = new Paint();
-                        final Rect rect = new Rect(0, 0, x, y);
-                        paint.setAntiAlias(true);
-                        paint.setColor(color);
-                        canvas.drawCircle(x/2, x/2, x/2-5, paint);
-                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-                        canvas.drawBitmap(bitmap, rect, rect, paint);
+                        final Rect rect = new Rect(0, 0, bitmapimg.getWidth(),
+                                bitmapimg.getHeight());
 
-                        imageView.setImageBitmap(output);
+                        paint.setAntiAlias(true);
+                        canvas.drawARGB(0, 0, 0, 0);
+                        paint.setColor(color);
+                        bitmapimg.setHeight(bitmapimg.getWidth());
+                        canvas.drawCircle(bitmapimg.getWidth() / 5,
+                                bitmapimg.getHeight() / 5, bitmapimg.getWidth() / 5, paint);
+                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+                        canvas.drawBitmap(bitmapimg, rect, rect, paint);
+                        //imageView.setImageBitmap(output);
+
+                        System.out.println("Image Upload!");
+                        output.setHeight(output.getHeight()/100);
+                        output.setWidth(output.getWidth()/100);
+                        uploadImage.setImageBitmap(output);
+                        uploadImage.setImageDrawable(imageView.getDrawable());
                     } else {
                         alert();
                     }
@@ -112,7 +127,7 @@ public class signupScreen extends Activity {
 
     private void alert() {
         Dialog dialog = new AlertDialog.Builder(this).setTitle("ERROR")
-                .setMessage("Image Invalid!")
+                .setMessage("Image invalid!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         picPath = null;
@@ -124,6 +139,7 @@ public class signupScreen extends Activity {
     private String[] categories;
     private Spinner spinner;
     String gender;
+    ImageButton sendSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,18 +171,37 @@ public class signupScreen extends Activity {
             }
         });
 
-        username = (TextView) findViewById(R.id.signup_text_username);
-        password = (TextView) findViewById(R.id.signup_text_username);
-        phone = (TextView) findViewById(R.id.signup_text_username);
-        email = (TextView) findViewById(R.id.signup_text_username);
+        username = (TextView) findViewById(R.id.signup_username);
+        password = (TextView) findViewById(R.id.signup_password);
+        phone = (TextView) findViewById(R.id.signup_phone);
+        email = (TextView) findViewById(R.id.signup_email);
 
-        ImageButton sendSignup = (ImageButton) findViewById(R.id.signup_button_signup);
+        sendSignup = (ImageButton) findViewById(R.id.signup_button_signup);
         sendSignup.setOnClickListener(new View.OnClickListener() {
             InputStream is = null;
             boolean received = false;
 
             @Override
             public void onClick(View v) {
+                boolean valid = false;
+                for (int i=0; i<email.getText().toString().length(); i++) {
+                    if (email.getText().toString().charAt(i)=='@') {
+                        valid = true;
+                        break;
+                    }
+                }
+                if (!valid) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(signupScreen.this);
+                    alert.setTitle("ERROR");
+                    alert.setMessage("Email address invalid!");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick (DialogInterface dialog, int id) {
+                            email.setText("");
+                        }
+                    });
+                    alert.show();
+                }
+
                 String result = "";
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("username", username.getText().toString()));
@@ -176,14 +211,16 @@ public class signupScreen extends Activity {
                 nameValuePairs.add(new BasicNameValuePair("gender", gender));
 
                 try{
-                    final HttpClient httpclient = new DefaultHttpClient();
-                    final HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php/" +
-                            "user/sign_up");
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws." +
+                            "com/Hangout/index.php/user/sign_up");
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    Log.e("log_tag", nameValuePairs.toString());
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity entity = response.getEntity();
                     is = entity.getContent();
-                    received = response.getStatusLine().getStatusCode()==200;
                 }catch(Exception e){
                     Log.e("log_tag", "Error in http connection " + e.toString());
                 }
@@ -212,17 +249,17 @@ public class signupScreen extends Activity {
                     Log.e("log_tag", "Error parsing data "+e.toString());
                 }
 
-                if (finish == 1 && received) {
+                if (finish == 1) {
                     System.out.println("Sign up successfully!");
                     Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                     startActivity(nextScreen);
                 } else {
                     AlertDialog.Builder alert = new AlertDialog.Builder(signupScreen.this);
                     alert.setTitle("ERROR");
-                    alert.setMessage("Connect failed!");
+                    alert.setMessage("Duplicate username!");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick (DialogInterface dialog, int id) {
-                            Toast.makeText(signupScreen.this, "Success", Toast.LENGTH_SHORT) .show();
+                            username.setText("");
                         }
                     });
                     alert.show();
@@ -230,12 +267,13 @@ public class signupScreen extends Activity {
             }
         });
 
-        ImageButton uploadImage = (ImageButton) findViewById(R.id.signup_button_signup);
+        uploadImage = (ImageButton) findViewById(R.id.signup_photo);
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
+                System.out.println("about ot upload");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, 1);
             }
