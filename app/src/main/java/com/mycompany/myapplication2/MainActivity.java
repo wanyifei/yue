@@ -27,8 +27,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detail);
 
+        /*
         Resources res = getResources();
         memeTitles = res.getStringArray(R.array.titles);
         memeDescriptions = res.getStringArray(R.array.descriptions);
@@ -36,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
         list = (ListView) findViewById(R.id.listView);
         YoujiaAdapter adapter = new YoujiaAdapter(this, memeTitles, images, memeDescriptions);
         list.setAdapter(adapter);
+        */
     }
 
     class YoujiaAdapter extends ArrayAdapter<String>
