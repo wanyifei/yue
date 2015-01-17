@@ -186,10 +186,10 @@ public class listViewScreen extends Activity {
         sort(0);
 
         list = (ListView) findViewById(R.id.listView);
-        listView adapter = new listView(this);
-        list.setAdapter(adapter);
-        listViewOnclick onclickEvent = new listViewOnclick();
-        list.setOnItemClickListener(onclickEvent);
+        //listView adapter = new listView(this);
+//        list.setAdapter(adapter);
+//        listViewOnclick onclickEvent = new listViewOnclick();
+//        list.setOnItemClickListener(onclickEvent);
     }
 
     private void sort(int sortby) {
@@ -220,41 +220,41 @@ public class listViewScreen extends Activity {
         }
     }
 
-    class listView extends ArrayAdapter<String>
-    {
-        Context context;
-        int[] images;
-        String[] title;
-        String[] postName;
-        String[] destinationLocation;
-        String[] destinationTime;
+//    class listView extends ArrayAdapter<String>
+//    {
+//        Context context;
+//        int[] images;
+//        String[] title;
+//        String[] postName;
+//        String[] destinationLocation;
+//        String[] destinationTime;
 
-        listView(Context c, String[] titles)
-        {
-            super(c, R.layout.single_row, R.id.textView, titles);
-            this.context = c;
-            this.images = imgs;
-            this.titleArray = titles;
-            this.descriptionArray = desc;
-        }
+//        listView(Context c, String[] titles)
+//        {
+//            super(c, R.layout.single_row, R.id.textView, titles);
+//            this.context = c;
+//            this.images = imgs;
+//            this.titleArray = titles;
+//            this.descriptionArray = desc;
+//        }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View row = inflater.inflate(R.layout.single_row, parent, false);
+//
+//            ImageView myImage = (ImageView) row.findViewById(R.id.imageView);
+//            TextView myTitle = (TextView) row.findViewById(R.id.textView);
+//            TextView myDescription = (TextView) row.findViewById(R.id.textView2);
+//
+//            myImage.setImageResource(images[position]);
+//            myTitle.setText(titleArray[position]);
+//            myDescription.setText(descriptionArray[position]);
+//
+//            return row;
+//        }
 
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = inflater.inflate(R.layout.single_row, parent, false);
 
-            ImageView myImage = (ImageView) row.findViewById(R.id.imageView);
-            TextView myTitle = (TextView) row.findViewById(R.id.textView);
-            TextView myDescription = (TextView) row.findViewById(R.id.textView2);
-
-            myImage.setImageResource(images[position]);
-            myTitle.setText(titleArray[position]);
-            myDescription.setText(descriptionArray[position]);
-
-            return row;
-        }
-
-
-    }
+//    }
 }

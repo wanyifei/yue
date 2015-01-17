@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Timer;
 
 
 public class MainActivity extends Activity {
@@ -77,66 +79,53 @@ public class MainActivity extends Activity {
 
             try{
                 final HttpClient httpclient = new DefaultHttpClient();
-                final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                final HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php/" +
+                        "user/log_in");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                new CountDownTimer(5000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        try {
-                            HttpResponse response = httpclient.execute(httppost);
-                            HttpEntity entity = response.getEntity();
-                            is = entity.getContent();
-                        } catch(Exception e) {
-                            Log.e("log_tag", "Error in http connection " + e.toString());
-                        }
-                        if (is!=null) {
-                            received = true;
-                            cancel();
-                        }
-                    }
-                    public void onFinish() {
-                    }
-                }.start();
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                is = entity.getContent();
+                received = response.getStatusLine().getStatusCode()==200;
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }
-
-            try{
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                is.close();
-                result=sb.toString();
-            }catch(Exception e){
-                Log.e("log_tag", "Error converting result "+e.toString());
-            }
-
             int correct = 0;
-            try{
-                JSONArray jArray = new JSONArray(result);
-                for(int i=0;i<jArray.length();i++){
-                    JSONObject json_data = jArray.getJSONObject(i);
-                    correct = json_data.getInt("correct");
+            if (received) {
+                try{
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    is.close();
+                    result=sb.toString();
+                }catch(Exception e){
+                    Log.e("log_tag", "Error converting result "+e.toString());
                 }
-            }catch(JSONException e){
-                Log.e("log_tag", "Error parsing data "+e.toString());
-            }
 
+                try{
+                    JSONArray jArray = new JSONArray(result);
+                    for(int i=0;i<jArray.length();i++){
+                        JSONObject json_data = jArray.getJSONObject(i);
+                        correct = json_data.getInt("is_successful");
+                    }
+                }catch(JSONException e){
+                    Log.e("log_tag", "Error parsing data "+e.toString());
+                }
+
+            }
             if (!received) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 alert.setTitle("ERROR");
                 alert.setMessage("Connection failed!");
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick (DialogInterface dialog, int id) {
-                        Toast.makeText (MainActivity.this, "Success", Toast.LENGTH_SHORT) .show();
                     }
                 });
                 alert.show();
             }
-
-            if (correct == 1) {
+            else if (correct == 1) {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 startActivity(nextScreen);
             } else {

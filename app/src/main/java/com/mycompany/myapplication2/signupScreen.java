@@ -130,7 +130,7 @@ public class signupScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
 
-        categories = getResources().getStringArray(R.array.category_list);
+        categories = getResources().getStringArray(R.array.signup_gender_array);
         //imgs = getResources().obtainTypedArray(R.array.countries_flag_list);
 
         //image = (ImageView) findViewById(R.id.country_image);
@@ -169,33 +169,21 @@ public class signupScreen extends Activity {
             public void onClick(View v) {
                 String result = "";
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("title", username.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("destination", password.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("depatureLocation", phone.getText().toString()));
-                nameValuePairs.add(new BasicNameValuePair("date", email.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("username", username.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("password", password.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("phone_number", phone.getText().toString()));
+                nameValuePairs.add(new BasicNameValuePair("email", email.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("gender", gender));
 
                 try{
                     final HttpClient httpclient = new DefaultHttpClient();
-                    final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                    final HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php/" +
+                            "user/sign_up");
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                    new CountDownTimer(5000, 1000) {
-                        public void onTick(long millisUntilFinished) {
-                            try {
-                                HttpResponse response = httpclient.execute(httppost);
-                                HttpEntity entity = response.getEntity();
-                                is = entity.getContent();
-                            } catch(Exception e) {
-                                Log.e("log_tag", "Error in http connection " + e.toString());
-                            }
-                            if (is!=null) {
-                                received = true;
-                                cancel();
-                            }
-                        }
-                        public void onFinish() {
-                        }
-                    }.start();
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity entity = response.getEntity();
+                    is = entity.getContent();
+                    received = response.getStatusLine().getStatusCode()==200;
                 }catch(Exception e){
                     Log.e("log_tag", "Error in http connection " + e.toString());
                 }
@@ -218,13 +206,14 @@ public class signupScreen extends Activity {
                     JSONArray jArray = new JSONArray(result);
                     for(int i=0;i<jArray.length();i++){
                         JSONObject json_data = jArray.getJSONObject(i);
-                        finish = json_data.getInt("finish");
+                        finish = json_data.getInt("is_successful");
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
                 }
 
                 if (finish == 1 && received) {
+                    System.out.println("Sign up successfully!");
                     Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                     startActivity(nextScreen);
                 } else {
