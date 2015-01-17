@@ -1,12 +1,15 @@
 package com.mycompany.myapplication2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -92,6 +96,8 @@ public class listViewScreen extends Activity {
     ArrayList<Post> posts=new ArrayList<Post>();
     String type;
 
+    InputStream is = null;
+    boolean received = false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_screen);
@@ -102,18 +108,31 @@ public class listViewScreen extends Activity {
         type = i.getStringExtra("type");
 
         String result = "";
-        InputStream is = null;
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("type", type));
 
         try{
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            is = entity.getContent();
-        } catch(Exception e){
+            new CountDownTimer(5000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    try {
+                        HttpResponse response = httpclient.execute(httppost);
+                        HttpEntity entity = response.getEntity();
+                        is = entity.getContent();
+                    } catch(Exception e) {
+                        Log.e("log_tag", "Error in http connection " + e.toString());
+                    }
+                    if (is!=null) {
+                        received = true;
+                        cancel();
+                    }
+                }
+                public void onFinish() {
+                }
+            }.start();
+        }catch(Exception e){
             Log.e("log_tag", "Error in http connection " + e.toString());
         }
 
@@ -128,6 +147,18 @@ public class listViewScreen extends Activity {
             result=sb.toString();
         }catch(Exception e){
             Log.e("log_tag", "Error converting result "+e.toString());
+        }
+
+        if (!received) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(listViewScreen.this);
+            alert.setTitle("ERROR");
+            alert.setMessage("Connection failed!");
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick (DialogInterface dialog, int id) {
+                    Toast.makeText(listViewScreen.this, "Success", Toast.LENGTH_SHORT) .show();
+                }
+            });
+            alert.show();
         }
 
         try{

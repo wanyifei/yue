@@ -1,12 +1,16 @@
 package com.mycompany.myapplication2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,7 +35,6 @@ import java.util.ArrayList;
 public class activityDetailScreen extends Activity {
 
     int postID;
-    int responderID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -51,7 +54,8 @@ public class activityDetailScreen extends Activity {
         destination.setText(i.getStringExtra("destination"));
         title.setText(i.getStringExtra("title"));
         depatureLocation.setText(i.getStringExtra("depatureLocation"));
-        depatureTime.setText(i.getStringExtra("depatureTime"));
+        depatureTime.setText(String.format(i.getStringExtra("date")+"/"+i.getStringExtra("month")
+        +"  "+i.getStringExtra("hour")+":"+i.getStringExtra("minute")));
         remark.setText(i.getStringExtra("remark"));
 
         ImageButton sendJoin = (ImageButton) findViewById(R.id.imageButton);
@@ -59,15 +63,76 @@ public class activityDetailScreen extends Activity {
     }
 
     private class joinOnclick implements View.OnClickListener {
+        InputStream is = null;
+        boolean received = false;
+
         public void onClick(View v) {
+            String result = "";
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("postID",Integer.toString(postID)));
 
             try{
-                HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                final HttpClient httpclient = new DefaultHttpClient();
+                final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                new CountDownTimer(5000, 1000) {
+                    public void onTick(long millisUntilFinished) {
+                        try {
+                            HttpResponse response = httpclient.execute(httppost);
+                            HttpEntity entity = response.getEntity();
+                            is = entity.getContent();
+                        } catch(Exception e) {
+                            Log.e("log_tag", "Error in http connection " + e.toString());
+                        }
+                        if (is!=null) {
+                            received = true;
+                            cancel();
+                        }
+                    }
+                    public void onFinish() {
+                    }
+                }.start();
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
+            }
+
+            try{
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                is.close();
+                result=sb.toString();
+            }catch(Exception e){
+                Log.e("log_tag", "Error converting result "+e.toString());
+            }
+
+            int finish = 0;
+            try{
+                JSONArray jArray = new JSONArray(result);
+                for(int i=0;i<jArray.length();i++){
+                    JSONObject json_data = jArray.getJSONObject(i);
+                    finish = json_data.getInt("finish");
+                }
+            }catch(JSONException e){
+                Log.e("log_tag", "Error parsing data "+e.toString());
+            }
+
+            if (finish == 1 && received) {
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                startActivity(nextScreen);
+            } else {
+                AlertDialog.Builder alert = new AlertDialog.Builder(activityDetailScreen.this);
+                alert.setTitle("ERROR");
+                alert.setMessage("Connection failed!");
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick (DialogInterface dialog, int id) {
+                        Toast.makeText(activityDetailScreen.this, "Success", Toast.LENGTH_SHORT) .show();
+                    }
+                });
+                alert.show();
             }
         }
     }

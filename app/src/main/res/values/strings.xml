@@ -3,11 +3,11 @@
 
     <string name="app_name">My Application2</string>
 
-    <string name="profile_username">Username</string>
-    <string name="profile_gender">Unknown</string>
-    <string name="profile_email">example@gmail.com</string>
-    <string name="profile_phone">xxx-xxx-xxxx</string>
-    <drawable name="profile_photo">@drawable/default_user_photo</drawable>
+    <string name="profile_username">waiting...</string>
+    <string name="profile_gender">waiting...</string>
+    <string name="profile_email">waiting...</string>
+    <string name="profile_phone">waiting...</string>
+    <drawable name="profile_photo">waiting...</drawable>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

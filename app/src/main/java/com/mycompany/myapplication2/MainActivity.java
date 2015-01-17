@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -62,24 +63,41 @@ public class MainActivity extends Activity {
     }
 
     private class loginOnclick implements View.OnClickListener {
+        InputStream is = null;
+        boolean received = false;
+
+        @Override
         public void onClick(View v) {
             Log.e("n", inputName.getText() + "." + inputPassword.getText());
 
             String result = "";
-            InputStream is = null;
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("username", inputName.toString()));
             nameValuePairs.add(new BasicNameValuePair("password",inputPassword.toString()));
 
             try{
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
+                final HttpClient httpclient = new DefaultHttpClient();
+                final HttpPost httppost = new HttpPost("http://example.com/getAllPeopleBornAfter.php");
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity entity = response.getEntity();
-                is = entity.getContent();
+                new CountDownTimer(5000, 1000) {
+                    public void onTick(long millisUntilFinished) {
+                        try {
+                            HttpResponse response = httpclient.execute(httppost);
+                            HttpEntity entity = response.getEntity();
+                            is = entity.getContent();
+                        } catch(Exception e) {
+                            Log.e("log_tag", "Error in http connection " + e.toString());
+                        }
+                        if (is!=null) {
+                            received = true;
+                            cancel();
+                        }
+                    }
+                    public void onFinish() {
+                    }
+                }.start();
             }catch(Exception e){
-                Log.e("log_tag", "Error in http connection "+e.toString());
+                Log.e("log_tag", "Error in http connection " + e.toString());
             }
 
             try{
@@ -104,6 +122,18 @@ public class MainActivity extends Activity {
                 }
             }catch(JSONException e){
                 Log.e("log_tag", "Error parsing data "+e.toString());
+            }
+
+            if (!received) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setTitle("ERROR");
+                alert.setMessage("Connection failed!");
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick (DialogInterface dialog, int id) {
+                        Toast.makeText (MainActivity.this, "Success", Toast.LENGTH_SHORT) .show();
+                    }
+                });
+                alert.show();
             }
 
             if (correct == 1) {
