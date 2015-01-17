@@ -33,13 +33,15 @@ public class MainActivity extends Activity {
 
     private class singupOnclick implements View.OnClickListener {
         public void onClick(View v) {
-            Intent nextScreen = new Intent(getApplicationContext(), listViewScreen.class);
+            Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
             startActivity(nextScreen);
         }
     }
 
     private class loginOnclick implements View.OnClickListener {
         public void onClick(View v) {
+            //Check the username and password with database
+
             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
             alert.setTitle("ERROR");
             alert.setMessage("Unrecognized username or\nIncorrect password!");
