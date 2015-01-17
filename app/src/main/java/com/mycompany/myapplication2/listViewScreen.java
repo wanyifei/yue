@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -40,11 +44,48 @@ public class listViewScreen extends Activity {
 
     class Post {
         public int id;
+        public int date;
+        public int month;
+        public int hour;
+        public int minute;
+        public double longitude;
+        public double latitude;
         public String postName;
         public String title;
         public String destinationLocation;
-        public String destinationTime;
         public String description;
+    }
+
+    LocationManager locationManager;
+    static Location currentLocation;
+
+    static class postSort1 implements Comparator {
+        public int compare(Object o1,Object o2){
+            Post p1 = (Post)o1;
+            Post p2 = (Post)o2;
+            if (p1.month == p2.month) {
+                if (p1.date == p2.date) {
+                    if (p1.hour == p2.hour) {
+                        return p1.minute > p2.minute ? 1 : 0;
+                    }
+                    return p1.hour > p2.hour ? 1 : 0;
+                }
+                return p1.date > p2.date ? 1 : 0;
+            }
+            return p1.month > p2.month ? 1 : 0;
+        }
+    }
+
+    static class postSort0 implements Comparator {
+        public int compare(Object o1,Object o2){
+            Post p1 = (Post)o1;
+            Post p2 = (Post)o2;
+            double dis1 = (p1.latitude - currentLocation.getLatitude())*(p1.latitude - currentLocation.getLatitude()) +
+                    (p1.longitude - currentLocation.getLatitude())*(p1.longitude - currentLocation.getLatitude());
+            double dis2 = (p2.latitude - currentLocation.getLatitude())*(p2.latitude - currentLocation.getLatitude()) +
+                    (p2.longitude - currentLocation.getLatitude())*(p2.longitude - currentLocation.getLatitude());
+            return dis1 > dis2 ? 1 : 0;
+        }
     }
 
     ListView list;
@@ -54,6 +95,8 @@ public class listViewScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_screen);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         Intent i = getIntent();
         type = i.getStringExtra("type");
@@ -96,15 +139,20 @@ public class listViewScreen extends Activity {
                 newPost.postName = json_data.getString("postName");
                 newPost.title = json_data.getString("title");
                 newPost.destinationLocation = json_data.getString("destinationLocation");
-                newPost.destinationTime = json_data.getString("destinationTime");
+                newPost.date = json_data.getInt("date");
+                newPost.month = json_data.getInt("month");
+                newPost.hour = json_data.getInt("hour");
+                newPost.minute = json_data.getInt("minute");
                 newPost.description = json_data.getString("description");
+                newPost.latitude = json_data.getDouble("latitude");
+                newPost.longitude = json_data.getDouble("longitude");
                 posts.add(newPost);
             }
         }catch(JSONException e){
             Log.e("log_tag", "Error parsing data "+e.toString());
         }
 
-
+        sort(0);
 
         list = (ListView) findViewById(R.id.listView);
         listView adapter = new listView(this);
@@ -113,7 +161,16 @@ public class listViewScreen extends Activity {
         list.setOnItemClickListener(onclickEvent);
     }
 
-    public class listViewOnclick implements AdapterView.OnItemClickListener {
+    private void sort(int sortby) {
+        if (sortby == 0) {
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Collections.sort(posts, new postSort0());
+        } else if (sortby == 1) {
+            Collections.sort(posts, new postSort1());
+        }
+    }
+
+    private class listViewOnclick implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> adapter, View v, int position, long a){
@@ -122,7 +179,10 @@ public class listViewScreen extends Activity {
             nextScreen.putExtra("postID", selectPost.id);
             nextScreen.putExtra("postName", selectPost.postName);
             nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
-            nextScreen.putExtra("destinationTime", selectPost.destinationTime);
+            nextScreen.putExtra("date", selectPost.date);
+            nextScreen.putExtra("month", selectPost.month);
+            nextScreen.putExtra("hour", selectPost.hour);
+            nextScreen.putExtra("minute", selectPost.minute);
             nextScreen.putExtra("title", selectPost.title);
             nextScreen.putExtra("description", selectPost.description);
             startActivity(nextScreen);
