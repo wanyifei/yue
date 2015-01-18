@@ -52,7 +52,7 @@
         android:layout_alignBottom="@+id/imageView"
         android:layout_toStartOf="@+id/list_activity_destination" />
 
-    <ImageButton
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/check_button"
@@ -64,7 +64,7 @@
         android:layout_toStartOf="@+id/imageButton5"
         android:layout_marginTop="20dp" />
 
-    <ImageButton
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/button_cross"

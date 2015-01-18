@@ -49,7 +49,11 @@ public class activityDetailScreen extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         Intent i = getIntent();
+
+        ImageView pic=(ImageView) findViewById(R.id.imageView2);
+        pic.setImageResource(MainActivity.user_image);
 
         TextView name = (TextView) findViewById(R.id.fill_activity_name);
         TextView destination = (TextView) findViewById(R.id.fill_activity_destination);

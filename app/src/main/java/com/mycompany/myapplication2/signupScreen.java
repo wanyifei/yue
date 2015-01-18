@@ -53,6 +53,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by wangyifei on 1/17/15.
@@ -271,15 +272,19 @@ public class signupScreen extends ActionBarActivity {
         });
 
         uploadImage = (ImageButton) findViewById(R.id.signup_photo);
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                System.out.println("about ot upload");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, 1);
-            }
-        });
+        Random random=new Random();
+        MainActivity.user_image=listViewScreen.profile_pics[random.nextInt()%10];
+
+        uploadImage.setImageResource(MainActivity.user_image);
+//        uploadImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                System.out.println("about ot upload");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(intent, 1);
+//            }
+//        });
     }
 }
