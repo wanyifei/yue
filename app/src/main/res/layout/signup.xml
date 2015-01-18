@@ -141,10 +141,9 @@
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:prompt="@string/category_label"
+                android:prompt="@string/gender_label"
                 android:clickable="false"
-                android:spinnerMode="dropdown"
-                android:entries="@array/signup_gender_array"/>
+                android:spinnerMode="dropdown"/>
 
             <EditText
                 android:layout_width="fill_parent"
