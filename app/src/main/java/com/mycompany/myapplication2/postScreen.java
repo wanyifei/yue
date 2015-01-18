@@ -8,8 +8,11 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -38,7 +41,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class postScreen extends Activity {
+public class postScreen extends ActionBarActivity {
 
     //private ImageView image;
     private String[] categories;
@@ -60,6 +63,9 @@ public class postScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_view);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent i=getIntent();
 
         categories = getResources().getStringArray(R.array.category_list);
         //imgs = getResources().obtainTypedArray(R.array.countries_flag_list);
@@ -96,40 +102,37 @@ public class postScreen extends Activity {
         description = (TextView) findViewById(R.id.editText);
 
 
-
-
         Button sendPost = (Button) findViewById(R.id.button);
         sendPost.setOnClickListener(new View.OnClickListener() {
             InputStream is = null;
 
             @Override
             public void onClick(View v) {
-                if (date.getText()==null || month.getText()==null || hour.getText()==null || minute.getText()==null) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
-                    alert.setTitle("ERROR");
-                    alert.setMessage("Time invalid!");
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick (DialogInterface dialog, int id) {
-                        }
-                    });
-                    alert.show();
-                }
-                else if (Integer.getInteger(date.getText().toString())<=0 || Integer.getInteger(date.getText().toString())>=32
-                    || Integer.getInteger(month.getText().toString())<=0 ||
-                        Integer.getInteger(month.getText().toString())>=13 ||
-                        Integer.getInteger(hour.getText().toString())<0 ||
-                        Integer.getInteger(hour.getText().toString())>=25 ||
-                        Integer.getInteger(minute.getText().toString())<0 ||
-                        Integer.getInteger(minute.getText().toString())>=61) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
-                    alert.setTitle("ERROR");
-                    alert.setMessage("Time invalid!");
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick (DialogInterface dialog, int id) {
-                        }
-                    });
-                    alert.show();
-                }
+//                if (date.getText() == null || month.getText() == null || hour.getText() == null || minute.getText() == null) {
+//                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
+//                    alert.setTitle("ERROR");
+//                    alert.setMessage("Time invalid!");
+//                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                        }
+//                    });
+//                    alert.show();
+//                } else if (Integer.getInteger(date.getText().toString()) <= 0 || Integer.getInteger(date.getText().toString()) >= 32
+//                        || Integer.getInteger(month.getText().toString()) <= 0 ||
+//                        Integer.getInteger(month.getText().toString()) >= 13 ||
+//                        Integer.getInteger(hour.getText().toString()) < 0 ||
+//                        Integer.getInteger(hour.getText().toString()) >= 25 ||
+//                        Integer.getInteger(minute.getText().toString()) < 0 ||
+//                        Integer.getInteger(minute.getText().toString()) >= 61) {
+//                    AlertDialog.Builder alert = new AlertDialog.Builder(postScreen.this);
+//                    alert.setTitle("ERROR");
+//                    alert.setMessage("Time invalid!");
+//                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                        }
+//                    });
+//                    alert.show();
+//                }
 
                 String result = "";
                 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -142,44 +145,45 @@ public class postScreen extends Activity {
                 nameValuePairs.add(new BasicNameValuePair("time_minute", minute.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("description", description.getText().toString()));
                 nameValuePairs.add(new BasicNameValuePair("category", type));
+                nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
 
-                try{
+                try {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
-                     HttpClient httpclient = new DefaultHttpClient();
-                     HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/" +
-                             "index.php/activity/post_activity");
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/" +
+                            "index.php/activity/post_activity");
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                                HttpResponse response = httpclient.execute(httppost);
-                                HttpEntity entity = response.getEntity();
-                                is = entity.getContent();
-                }catch(Exception e){
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity entity = response.getEntity();
+                    is = entity.getContent();
+                } catch (Exception e) {
                     Log.e("log_tag", "Error in http connection " + e.toString());
                 }
 
-                try{
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
                     StringBuilder sb = new StringBuilder();
                     String line = null;
                     while ((line = reader.readLine()) != null) {
                         sb.append(line + "\n");
                     }
                     is.close();
-                    result=sb.toString();
-                }catch(Exception e){
-                    Log.e("log_tag", "Error converting result "+e.toString());
+                    result = sb.toString();
+                } catch (Exception e) {
+                    Log.e("log_tag", "Error converting result " + e.toString());
                 }
 
                 int finish = 0;
-                try{
-                    Log.e("log_tag", "string "+result);
+                try {
+                    Log.e("log_tag", "string " + result);
                     JSONArray jArray = new JSONArray(result);
-                    for(int i=0;i<jArray.length();i++){
+                    for (int i = 0; i < jArray.length(); i++) {
                         JSONObject json_data = jArray.getJSONObject(i);
                         finish = json_data.getInt("is_successful");
                     }
-                }catch(JSONException e){
-                    Log.e("log_tag", "Error parsing data "+e.toString());
+                } catch (JSONException e) {
+                    Log.e("log_tag", "Error parsing data " + e.toString());
                 }
 
                 if (finish == 1) {
@@ -190,12 +194,30 @@ public class postScreen extends Activity {
                     alert.setTitle("ERROR");
                     alert.setMessage("Connection failed!");
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick (DialogInterface dialog, int id) {
+                        public void onClick(DialogInterface dialog, int id) {
                         }
                     });
                     alert.show();
                 }
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 /**
  * Created by wangyifei on 1/17/15.
  */
-public class activityDetailScreen extends Activity {
+public class activityDetailScreen extends ActionBarActivity {
 
     String postID;
     String type;
@@ -43,6 +46,7 @@ public class activityDetailScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
 
@@ -68,6 +72,7 @@ public class activityDetailScreen extends Activity {
         String result = "";
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("activity_id", postID));
+        nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
         InputStream is = null;
 
         try{
@@ -105,7 +110,7 @@ public class activityDetailScreen extends Activity {
             JSONArray jArray = new JSONArray(result);
             for(int j=0;j<jArray.length();j++){
                 JSONObject json_data = jArray.getJSONObject(j);
-                name.setText(json_data.getInt("username"));
+                name.setText(json_data.getString("username"));
             }
         }catch(JSONException e){
             Log.e("log_tag", "Error parsing data "+e.toString());
@@ -126,6 +131,26 @@ public class activityDetailScreen extends Activity {
         sendJoin.setOnClickListener(new joinOnclick());
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                startActivity(nextScreen);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private class joinOnclick implements View.OnClickListener {
         InputStream is = null;
 
@@ -133,6 +158,7 @@ public class activityDetailScreen extends Activity {
             String result = "";
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("activity_id",postID));
+            nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
 
             try{
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

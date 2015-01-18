@@ -1,5 +1,6 @@
 package com.mycompany.myapplication2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,7 +22,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -54,7 +57,7 @@ import java.util.List;
 /**
  * Created by wangyifei on 1/17/15.
  */
-public class signupScreen extends Activity {
+public class signupScreen extends ActionBarActivity {
 
     TextView username;
     TextView password;
@@ -107,6 +110,15 @@ public class signupScreen extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
     public BitmapDrawable putOverlay(Bitmap bitmap, Bitmap overlay) {
         Bitmap b = Bitmap.createScaledBitmap(bitmap, overlay.getWidth()-50, overlay.getHeight()-50,true);
         Canvas canvas = new Canvas(b);
@@ -135,6 +147,8 @@ public class signupScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         categories = getResources().getStringArray(R.array.signup_gender_array);
         //imgs = getResources().obtainTypedArray(R.array.countries_flag_list);
@@ -234,6 +248,7 @@ public class signupScreen extends Activity {
                     for(int i=0;i<jArray.length();i++){
                         JSONObject json_data = jArray.getJSONObject(i);
                         finish = json_data.getInt("is_successful");
+                        MainActivity.user_id=json_data.getInt("current_user_id");
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
@@ -242,6 +257,7 @@ public class signupScreen extends Activity {
                 if (finish == 1) {
                     System.out.println("Sign up successfully!");
                     Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                    nextScreen.putExtra("user_id", MainActivity.user_id);
                     startActivity(nextScreen);
                 } else {
                     AlertDialog.Builder alert = new AlertDialog.Builder(signupScreen.this);

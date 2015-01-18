@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,15 +41,18 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     EditText inputName;
     EditText inputPassword;
+
+    static public int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_page);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         inputName = (EditText) findViewById(R.id.welcome_button_username);
         inputPassword = (EditText) findViewById(R.id.welcome_button_password);
@@ -58,9 +63,26 @@ public class MainActivity extends Activity {
         toHomepageScreen.setOnClickListener(new loginOnclick());
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
     private class singupOnclick implements View.OnClickListener {
         public void onClick(View v) {
-            Intent nextScreen = new Intent(getApplicationContext(), mapViewScreen.class);
+            Intent nextScreen = new Intent(getApplicationContext(), signupScreen.class);
             startActivity(nextScreen);
         }
     }
@@ -115,6 +137,7 @@ public class MainActivity extends Activity {
                         JSONObject json_data = jArray.getJSONObject(i);
                         correct = json_data.getInt("is_successful");
                         if (correct==0) info = json_data.getString("fail_reason");
+                        if (correct==1) user_id=json_data.getInt("current_user_id");
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
@@ -124,6 +147,7 @@ public class MainActivity extends Activity {
 
             if (correct == 1) {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", user_id);
                 startActivity(nextScreen);
             } else {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);

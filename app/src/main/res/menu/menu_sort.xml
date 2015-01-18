@@ -1,0 +1,40 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/icon_home"
+        android:orderInCategory="200"
+        android:title="@string/action_title"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="350"
+        android:title="SORT BY"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_sort_by_size">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/menu_sort_1"
+                    android:title="Distance" />
+
+                <item
+                    android:id="@+id/menu_sort_2"
+                    android:title="Time" />
+            </group>
+        </menu>
+    </item>
+
+
+    <item
+        android:id="@+id/action_user"
+        android:icon="@drawable/profile_photo"
+        android:orderInCategory="300"
+        android:title="@string/action_title"
+        app:showAsAction="always" />
+</menu>

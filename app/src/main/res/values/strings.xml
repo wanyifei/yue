@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">My Application2</string>
+    <string name="app_name">Yue</string>
 
     <string name="profile_username">waiting...</string>
     <string name="profile_gender">waiting...</string>
@@ -36,6 +36,7 @@
         <item>This is description 10</item>
     </string-array>
     <string name="category_label">Category</string>
+    <string name="action_title">\"Yue\"</string>
     <string-array name="category_list">
         <item>food</item>
         <item>sports</item>

@@ -2,11 +2,15 @@ package com.mycompany.myapplication2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +36,14 @@ import java.util.ArrayList;
 /**
  * Created by wangyifei on 1/17/15.
  */
-public class profileScreen extends Activity {
+public class profileScreen extends ActionBarActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         TextView username = (TextView) findViewById(R.id.profile_username);
         TextView phone = (TextView) findViewById(R.id.profile_phone);
@@ -45,14 +52,15 @@ public class profileScreen extends Activity {
 
         Intent i = getIntent();
 
-        String id=i.getStringExtra("postid");
+        String id = i.getStringExtra("postid");
 
         String result = "";
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("activity_id", id));
+        nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
         InputStream is = null;
 
-        try{
+        try {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             HttpClient httpclient = new DefaultHttpClient();
@@ -63,41 +71,71 @@ public class profileScreen extends Activity {
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
             is = entity.getContent();
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.e("log_tag", "Error in http connection " + e.toString());
         }
-        String info="";
+        String info = "";
         int correct = 0;
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
             }
             is.close();
-            result=sb.toString();
-        }catch(Exception e){
-            Log.e("log_tag", "Error converting result "+e.toString());
+            result = sb.toString();
+        } catch (Exception e) {
+            Log.e("log_tag", "Error converting result " + e.toString());
         }
 
 
-
-        try{
+        try {
             System.out.println("return" + " " + result);
             JSONArray jArray = new JSONArray(result);
-            for(int j=0;j<jArray.length();j++){
+            for (int j = 0; j < jArray.length(); j++) {
                 JSONObject json_data = jArray.getJSONObject(j);
-                username.setText(json_data.getInt("username"));
-                phone.setText(json_data.getInt("phone_number"));
-                email.setText(json_data.getInt("email_address"));
-                gender.setText(json_data.getInt("gender"));
+                username.setText(json_data.getString("username"));
+                phone.setText(json_data.getString("phone_number"));
+                email.setText(json_data.getString("email_address"));
+                int der = json_data.getInt("gender");
+                switch (der) {
+                    case 0:
+                        gender.setText("Male");
+                        break;
+                    case 1:
+                        gender.setText("Female");
+                        break;
+                    case 2:
+                        gender.setText("Other");
+                        break;
+
+                }
             }
-        }catch(JSONException e){
-            Log.e("log_tag", "Error parsing data "+e.toString());
+        } catch (JSONException e) {
+            Log.e("log_tag", "Error parsing data " + e.toString());
         }
 
 
+    }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

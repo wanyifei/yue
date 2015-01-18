@@ -11,8 +11,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -46,7 +49,7 @@ import java.util.Date;
 /**
  * Created by wangyifei on 1/16/15.
  */
-public class listViewScreen extends Activity {
+public class listViewScreen extends ActionBarActivity {
 
     class Post {
         public int id;
@@ -73,6 +76,28 @@ public class listViewScreen extends Activity {
 
     LocationManager locationManager;
     static Location currentLocation;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_sort, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     static class postSort1 implements Comparator {
         public int compare(Object o1,Object o2){
@@ -112,6 +137,8 @@ public class listViewScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_screen);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -121,6 +148,7 @@ public class listViewScreen extends Activity {
         String result = "";
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("category", type));
+        nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
 
         try{
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -209,6 +237,7 @@ public class listViewScreen extends Activity {
                 System.out.println("text");
                 Intent nextScreen = new Intent(getApplicationContext(), activityDetailScreen.class);
                 nextScreen.putExtra("postID", Integer.toString(selectPost.id));
+            nextScreen.putExtra("user_id", MainActivity.user_id);
             nextScreen.putExtra("type", type);
                 nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
                 nextScreen.putExtra("depatureLocation", selectPost.departure);
