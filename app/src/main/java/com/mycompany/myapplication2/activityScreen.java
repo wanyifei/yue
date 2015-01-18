@@ -47,11 +47,6 @@ public class activityScreen extends ActionBarActivity {
         return true;
     }
 
-
-    public void onPrepareOptionsMenu(Menu m, MenuInflater mi) {
-        m.findItem(R.menu.menu_user).getIcon();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

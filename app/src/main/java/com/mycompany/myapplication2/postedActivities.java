@@ -173,7 +173,11 @@ public class postedActivities extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
+                if (i==null) {
+                    Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
 
+                    startActivity(next6);
+                }
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
                         Intent next = new Intent(getApplicationContext(), activityDetailScreen.class);
@@ -209,6 +213,10 @@ public class postedActivities extends ActionBarActivity {
                         next5.putExtra("postid", i.getStringExtra("postid"));
                         startActivity(next5);
                         break;
+                    default:
+                        Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                        startActivity(next6);
                 }
                 break;
 

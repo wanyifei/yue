@@ -40,6 +40,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 
@@ -52,6 +55,12 @@ public class MainActivity extends ActionBarActivity {
     static public int user_id;
     static public int user_image;
 
+    Menu menu;
+
+    public static int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
+            R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
+            R.drawable.img_thing, R.drawable.weenie};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
         ImageButton toSingupScreen = (ImageButton) findViewById(R.id.welcome_button_signup);
         ImageButton toHomepageScreen = (ImageButton) findViewById(R.id.welcome_button_login);
 
+
         toSingupScreen.setOnClickListener(new singupOnclick());
         toHomepageScreen.setOnClickListener(new loginOnclick());
     }
@@ -72,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu=menu;
         return true;
     }
 
@@ -153,9 +164,9 @@ public class MainActivity extends ActionBarActivity {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 nextScreen.putExtra("user_id", user_id);
                 Random random=new Random();
-                MainActivity.user_image=listViewScreen.profile_pics[random.nextInt()%10];
-                Resources res = getResources();
-                
+//                MainActivity.user_image=profile_pics[random.nextInt()%10];
+//                Resources res = getResources();
+//                menu.findItem(R.menu.menu_user).setIcon(MainActivity.user_image);
                 startActivity(nextScreen);
             } else {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);

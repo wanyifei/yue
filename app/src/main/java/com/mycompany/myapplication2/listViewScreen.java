@@ -72,9 +72,7 @@ public class listViewScreen extends ActionBarActivity {
     String[] names;
     String[] destinations;
     String[] times;
-    public static int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
-            R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
-            R.drawable.img_thing, R.drawable.weenie};
+
 
 
     LocationManager locationManager;
@@ -148,11 +146,7 @@ public class listViewScreen extends ActionBarActivity {
         setContentView(R.layout.list_view_screen);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        List ll = Arrays.asList(profile_pics);
-        Collections.shuffle(ll);
-        for (int i=0; i<10;i++) {
-            profile_pics[i]=Integer.getInteger(ll.get(i).toString());
-        }
+
 
         posts.clear();
 
@@ -228,7 +222,7 @@ public class listViewScreen extends ActionBarActivity {
         });
 
         list = (ListView) findViewById(R.id.listView);
-        listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
+        listViewAdapter adapter = new listViewAdapter(this, titles, MainActivity.profile_pics, names,destinations,times);
         list.setAdapter(adapter);
 
         listViewOnclick onclickEvent = new listViewOnclick();

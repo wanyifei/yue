@@ -73,7 +73,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/welcome_button_password"
             android:layout_gravity="center_horizontal"

@@ -65,6 +65,8 @@ public class signupScreen extends ActionBarActivity {
     TextView phone;
     TextView email;
 
+    Menu menu;
+
     ImageButton uploadImage;
 
     private ImageView imageView;
@@ -111,6 +113,7 @@ public class signupScreen extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu=menu;
         return true;
     }
 
@@ -271,11 +274,11 @@ public class signupScreen extends ActionBarActivity {
             }
         });
 
-        uploadImage = (ImageButton) findViewById(R.id.signup_photo);
-        Random random=new Random();
-        MainActivity.user_image=listViewScreen.profile_pics[random.nextInt()%10];
-
-        uploadImage.setImageResource(MainActivity.user_image);
+//        uploadImage = (ImageButton) findViewById(R.id.signup_photo);
+//        Random random=new Random();
+//        MainActivity.user_image=MainActivity.profile_pics[random.nextInt()%10];
+//        menu.findItem(R.menu.menu_user).setIcon(MainActivity.user_image);
+//        uploadImage.setImageResource(MainActivity.user_image);
 //        uploadImage.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

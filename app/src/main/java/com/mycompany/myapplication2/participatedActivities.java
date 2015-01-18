@@ -95,6 +95,7 @@ public class participatedActivities extends ActionBarActivity {
         }
 
         try{
+            System.out.println("AA"+result.toString());
             JSONArray jArray = new JSONArray(result);
             for(int j=0;j<jArray.length();j++){
                 JSONObject json_data = jArray.getJSONObject(j);
@@ -174,7 +175,11 @@ public class participatedActivities extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
+                if (i==null) {
+                    Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
 
+                    startActivity(next6);
+                }
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
                         Intent next = new Intent(getApplicationContext(), activityDetailScreen.class);
@@ -210,6 +215,10 @@ public class participatedActivities extends ActionBarActivity {
                         next5.putExtra("postid", i.getStringExtra("postid"));
                         startActivity(next5);
                         break;
+                    default:
+                        Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                        startActivity(next6);
                 }
                 break;
 
