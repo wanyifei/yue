@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/welcome_header"
             android:background="#00000000"
-            android:src="@drawable/welcome_yue"
+            android:src="@drawable/welcome_header"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp" />
     </LinearLayout>
