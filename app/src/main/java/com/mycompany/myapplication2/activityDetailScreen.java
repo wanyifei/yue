@@ -46,7 +46,8 @@ public class activityDetailScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Intent i = getIntent();
 
@@ -146,6 +147,24 @@ public class activityDetailScreen extends ActionBarActivity {
             case R.id.action_home:
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 startActivity(nextScreen);
+                break;
+            case android.R.id.home:
+                if (type=="participated") {
+                    Intent next = new Intent(getApplicationContext(), participatedActivities.class);
+                    startActivity(next);
+                }
+                else if (type=="posted") {
+                    Intent next = new Intent(getApplicationContext(), postedActivities.class);
+                    startActivity(next);
+                }
+                else {
+                    if (type=="posted") {
+                        Intent next = new Intent(getApplicationContext(), listViewScreen.class);
+                        next.putExtra("type", type);
+                        startActivity(next);
+                    }
+                }
+                break;
 
         }
         return super.onOptionsItemSelected(item);

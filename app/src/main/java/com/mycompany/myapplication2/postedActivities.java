@@ -37,7 +37,7 @@ import java.util.ArrayList;
 /**
  * Created by wangyifei on 1/16/15.
  */
-public class participatedActivities extends Activity {
+public class postedActivities extends Activity {
 
     ListView list;
     String[] titles;
@@ -51,8 +51,7 @@ public class participatedActivities extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.participated);
-
+        setContentView(R.layout.posted_activities);
 
         InputStream is = null;
         String result = "";
@@ -65,7 +64,7 @@ public class participatedActivities extends Activity {
             StrictMode.setThreadPolicy(policy);
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
-                    "/activity/get_join_activities");
+                    "/activity/get_post_activities");
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
@@ -124,19 +123,18 @@ public class participatedActivities extends Activity {
             times[i]=posted.get(i).date+"/"+posted.get(i).month+" "+posted.get(i).hour+":"+posted.get(i).minute;
         }
 
-
-        list = (ListView) findViewById(R.id.listView2);
+        list = (ListView) findViewById(R.id.listView);
         listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
         list.setAdapter(adapter);
 
         listViewOnclick onclickEvent = new listViewOnclick(adapter);
         list.setOnItemClickListener(onclickEvent);
 
-        ImageButton button1=(ImageButton) findViewById(R.id.imageButton);
+        ImageButton button1=(ImageButton) findViewById(R.id.imageButton2);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextScreen = new Intent(getApplicationContext(), postedActivities.class);
+                Intent nextScreen = new Intent(getApplicationContext(), participatedActivities.class);
                 startActivity(nextScreen);
             }
         });
@@ -165,7 +163,7 @@ public class participatedActivities extends Activity {
             System.out.println("text");
             Intent nextScreen = new Intent(getApplicationContext(), activityDetailScreen.class);
             nextScreen.putExtra("postID", Integer.toString(selectPost.id));
-            nextScreen.putExtra("type", "participated");
+            nextScreen.putExtra("type", "posted");
             nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
             nextScreen.putExtra("depatureLocation", selectPost.departure);
             nextScreen.putExtra("date", Integer.toString(selectPost.date));

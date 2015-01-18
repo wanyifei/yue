@@ -133,7 +133,6 @@ public class listViewScreen extends ActionBarActivity {
     String type;
 
     InputStream is = null;
-    boolean received = false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_screen);
