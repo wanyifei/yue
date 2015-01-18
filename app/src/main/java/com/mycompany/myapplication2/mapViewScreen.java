@@ -67,8 +67,7 @@ public class mapViewScreen extends ActionBarActivity
         }
 
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(),
-                mLastLocation.getLongitude()), 15));
+
 
         // Zoom in, animating the camera.
         map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
@@ -83,7 +82,8 @@ public class mapViewScreen extends ActionBarActivity
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude()), 15));
         }
     }
 

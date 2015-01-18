@@ -192,38 +192,38 @@ public class postScreen extends ActionBarActivity {
 //                        System.out.println(json_data.toString());
 //                        dest_lag = json_data.getDouble("longitude");
 //                        dest_lat = json_data.getDouble("latitude");
-                        JSONObject jsonObj = new JSONObject(result_1);
-
-                        // Getting JSON Array node
-                        JSONObject geometry = jsonObj.getJSONObject("geometry");
-
-                        JSONObject location = geometry.getJSONObject("location");
-                        dest_lat = location.getDouble("lat");
-                        dest_lag = location.getDouble("lng");
+                    JSONObject jsonObj_1 = new JSONObject(result_1);
+                    JSONArray results_1 = jsonObj_1.getJSONArray("results");
+                    JSONObject result_obj1 = results_1.getJSONObject(0);
+                    JSONObject geometry_1 = result_obj1.getJSONObject("geometry");
+                    JSONObject location_1 = geometry_1.getJSONObject("location");
+                        dest_lat = location_1.getDouble("lat");
+                        dest_lag = location_1.getDouble("lng");
 //                    }
                     System.out.println(dest_lat + " " + dest_lag);
 
 
                     HttpClient httpclient_2 = new DefaultHttpClient();
                     HttpPost httppost_2 = new HttpPost(depart_query);
-                    HttpResponse response_2 = httpclient_2.execute(httppost_1);
+                    HttpResponse response_2 = httpclient_2.execute(httppost_2);
                     HttpEntity entity_2 = response_2.getEntity();
                     depart_is = entity_2.getContent();
                     BufferedReader reader_2 = new BufferedReader(new InputStreamReader(depart_is, "iso-8859-1"), 8);
                     StringBuilder sb_2 = new StringBuilder();
                     String line_2 = null;
                     while ((line_2 = reader_2.readLine()) != null) {
-                        sb.append(line + "\n");
+                        sb_2.append(line_2 + "\n");
                     }
                     depart_is.close();
                     result_2 = sb_2.toString();
                     Log.e("log_tag", "string " + result_2);
+
                     JSONObject jsonObj_2 = new JSONObject(result_2);
-
-                    // Getting JSON Array node
-                    JSONObject geometry_2 = jsonObj_2.getJSONObject("geometry");
-
+                    JSONArray results = jsonObj_2.getJSONArray("results");
+                    JSONObject result_obj2 = results.getJSONObject(0);
+                    JSONObject geometry_2 = result_obj2.getJSONObject("geometry");
                     JSONObject location_2 = geometry_2.getJSONObject("location");
+
                     depart_lat = location_2.getDouble("lat");
                     deaprt_lag = location_2.getDouble("lng");
                     System.out.println(depart_lat + " " + deaprt_lag);
@@ -250,7 +250,7 @@ public class postScreen extends ActionBarActivity {
                 nameValuePairs.add(new BasicNameValuePair("depart_lat", Double.toString(depart_lat)));
                 nameValuePairs.add(new BasicNameValuePair("depart_lgt", Double.toString(deaprt_lag)));
                 nameValuePairs.add(new BasicNameValuePair("dest_lat", Double.toString(dest_lat)));
-                nameValuePairs.add(new BasicNameValuePair("dest_lag", Double.toString(dest_lag)));
+                nameValuePairs.add(new BasicNameValuePair("dest_lgt", Double.toString(dest_lag)));
 
                 try {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
