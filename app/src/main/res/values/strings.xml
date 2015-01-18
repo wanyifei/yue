@@ -37,6 +37,7 @@
     </string-array>
     <string name="category_label">Category</string>
     <string name="action_title">\"Yue\"</string>
+    <string name="gender_label">Gender</string>
     <string-array name="category_list">
         <item>food</item>
         <item>sports</item>
