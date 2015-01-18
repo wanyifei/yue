@@ -89,10 +89,6 @@ public class signupScreen extends ActionBarActivity {
                         picPath = path;
                         Bitmap bitmapimg = BitmapFactory.decodeStream(cr
                                 .openInputStream(uri));
-
-                        int x = bitmapimg.getWidth();
-                        int y = bitmapimg.getHeight();
-
 //                        uploadImage.setImageBitmap(output);
                         uploadImage.setImageDrawable(putOverlay(BitmapFactory.decodeResource(getResources(),
                                 R.drawable.default_user_photo), bitmapimg));

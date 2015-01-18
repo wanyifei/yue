@@ -57,7 +57,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDoquG-L4J6KTmnWhzLY7NAe-1jGJxPSrA"/>
+            android:value="AIzaSyBcxyuCrjMxAqQ9EHPih-3mNJOyG1THMHs"/>
     </application>
 
     <uses-feature
@@ -68,5 +68,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 </manifest>

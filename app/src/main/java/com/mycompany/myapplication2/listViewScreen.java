@@ -51,7 +51,7 @@ import java.util.Date;
  */
 public class listViewScreen extends ActionBarActivity {
 
-    class Post {
+    public static class Post {
         public int id;
         public int date;
         public int month;
@@ -129,7 +129,7 @@ public class listViewScreen extends ActionBarActivity {
     }
 
     ListView list;
-    ArrayList<Post> posts=new ArrayList<Post>();
+    public static ArrayList<Post> posts=new ArrayList<Post>();
     String type;
 
     InputStream is = null;
@@ -200,6 +200,11 @@ public class listViewScreen extends ActionBarActivity {
         }
 
         sort(1);
+//
+//        MyAdapter myAdapter = new MyAdapter();
+//        AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(myAdapter);
+//        animationAdapter.setAbsListView(mListView);
+//        mListView.setAdapter(animationAdapter);
 
         list = (ListView) findViewById(R.id.listView);
         listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);

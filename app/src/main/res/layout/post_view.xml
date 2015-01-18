@@ -89,13 +89,13 @@
                         android:id="@+id/edit_title"
                         android:layout_marginTop="12dp" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:id="@+id/edit_destination"
                         android:layout_marginTop="10dp" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:id="@+id/edit_departure_location"
