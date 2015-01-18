@@ -39,6 +39,8 @@
             android:name=".signupScreen"
             android:label="Sign Up"
             android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".Notifications"></activity>
         <activity android:name=".profileScreen"
             android:label="Profile"
             android:parentActivityName=".activityDetailScreen">

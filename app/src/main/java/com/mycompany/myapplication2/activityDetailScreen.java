@@ -199,20 +199,6 @@ public class activityDetailScreen extends ActionBarActivity {
                 Log.e("log_tag", "Error parsing data "+e.toString());
             }
 
-            if (finish == 1 ) {
-                Intent nextScreen = new Intent(getApplicationContext(), listViewScreen.class);
-                nextScreen.putExtra("type", type);
-                startActivity(nextScreen);
-            } else {
-                AlertDialog.Builder alert = new AlertDialog.Builder(activityDetailScreen.this);
-                alert.setTitle("ERROR");
-                alert.setMessage("Connection failed!");
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick (DialogInterface dialog, int id) {
-                    }
-                });
-                alert.show();
-            }
         }
     }
 }

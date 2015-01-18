@@ -14,8 +14,8 @@
         android:orientation="vertical">
 
         <fragment
-            android:id="@+id/fragment"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/abc_activity_chooser_view" />
@@ -75,7 +75,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
             android:id="@+id/list_activity_time"
-            android:layout_below="@+id/list_activity_title"
+            android:layout_below="@+id/list_activity_time"
             android:layout_toEndOf="@+id/list_activity_destination"
             android:layout_marginLeft="23dp" />
     </RelativeLayout>

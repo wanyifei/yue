@@ -139,6 +139,7 @@ public class listViewScreen extends ActionBarActivity {
         setContentView(R.layout.list_view_screen);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        posts.clear();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -201,10 +202,15 @@ public class listViewScreen extends ActionBarActivity {
 
         sort(1);
 //
-//        MyAdapter myAdapter = new MyAdapter();
-//        AlphaInAnimationAdapter animationAdapter = new AlphaInAnimationAdapter(myAdapter);
-//        animationAdapter.setAbsListView(mListView);
-//        mListView.setAdapter(animationAdapter);
+//
+        ImageButton bu = (ImageButton) findViewById(R.id.map_button);
+        bu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextScreen = new Intent(getApplicationContext(), mapViewScreen.class);
+                startActivity(nextScreen);
+            }
+        });
 
         list = (ListView) findViewById(R.id.listView);
         listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
@@ -221,6 +227,10 @@ public class listViewScreen extends ActionBarActivity {
         } else if (sortby == 1) {
             Collections.sort(posts, new postSort1());
         }
+        titles=null;
+        names=null;
+        destinations=null;
+        times=null;
         titles = new String[posts.size()];
         names = new String[posts.size()];
         destinations = new String[posts.size()];
@@ -242,7 +252,6 @@ public class listViewScreen extends ActionBarActivity {
                 System.out.println("text");
                 Intent nextScreen = new Intent(getApplicationContext(), activityDetailScreen.class);
                 nextScreen.putExtra("postID", Integer.toString(selectPost.id));
-            nextScreen.putExtra("user_id", MainActivity.user_id);
             nextScreen.putExtra("type", type);
                 nextScreen.putExtra("destinationLocation", selectPost.destinationLocation);
                 nextScreen.putExtra("depatureLocation", selectPost.departure);
