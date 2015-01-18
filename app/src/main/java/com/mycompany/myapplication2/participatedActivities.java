@@ -52,6 +52,7 @@ public class participatedActivities extends ActionBarActivity {
     int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
             R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
             R.drawable.img_thing, R.drawable.weenie};
+    Intent i=getIntent();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +172,7 @@ public class participatedActivities extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
-                Intent i=getIntent();
+
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
                         Intent next = new Intent(getApplicationContext(), activityScreen.class);

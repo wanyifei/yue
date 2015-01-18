@@ -48,6 +48,7 @@ public class Notifications extends ActionBarActivity {
     String[] names;
     String[] destinations;
     String[] times;
+    Intent i=getIntent();
     ArrayList<listViewScreen.Post> posted = new ArrayList<>();
     int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
             R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
@@ -168,7 +169,7 @@ public class Notifications extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
-                Intent i=getIntent();
+
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
                         Intent next = new Intent(getApplicationContext(), activityScreen.class);
@@ -270,7 +271,7 @@ public class Notifications extends ActionBarActivity {
                         Log.e("log_tag", "Error parsing data "+e.toString());
                     }
 
-
+                    System.out.println("ACCEPT "+nameValuePairs.toString());
                     Intent nextScreen = new Intent(getApplicationContext(), Notifications.class);
                     startActivity(nextScreen);
                 }
@@ -322,6 +323,7 @@ public class Notifications extends ActionBarActivity {
                         Log.e("log_tag", "Error parsing data "+e.toString());
                     }
 
+                    System.out.println("DECLINE "+nameValuePairs.toString());
                     Intent nextScreen = new Intent(getApplicationContext(), Notifications.class);
                     startActivity(nextScreen);
 
@@ -364,10 +366,10 @@ public class Notifications extends ActionBarActivity {
             TextView myTime = (TextView) row.findViewById(R.id.list_activity_time);
 
             myImage.setImageResource(images[position]);
-//            myTitle.setText(titleArray[position]);
-//            myName.setText(nameArray[position]);
-//            myDestination.setText(destinationArray[position]);
-//            myTime.setText(timeArray[position]);
+            myTitle.setText(titleArray[position]);
+            myName.setText(nameArray[position]);
+            myDestination.setText(destinationArray[position]);
+            myTime.setText(timeArray[position]);
 
             return row;
         }
