@@ -9,6 +9,7 @@ import android.provider.SyncStateContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -155,5 +156,22 @@ public class mapViewScreen extends ActionBarActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+                break;
+            case R.id.action_user:
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where", "map");
+                startActivity(next);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

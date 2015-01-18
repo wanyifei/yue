@@ -1,13 +1,17 @@
 package com.mycompany.myapplication2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Created by wangyifei on 1/16/15.
  */
-public class participatedActivities extends Activity {
+public class participatedActivities extends ActionBarActivity {
 
     ListView list;
     String[] titles;
@@ -52,7 +56,7 @@ public class participatedActivities extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.participated);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         InputStream is = null;
         String result = "";
@@ -129,7 +133,7 @@ public class participatedActivities extends Activity {
         listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
         list.setAdapter(adapter);
 
-        listViewOnclick onclickEvent = new listViewOnclick(adapter);
+        listViewOnclick onclickEvent = new listViewOnclick();
         list.setOnItemClickListener(onclickEvent);
 
         ImageButton button1=(ImageButton) findViewById(R.id.imageButton);
@@ -141,7 +145,7 @@ public class participatedActivities extends Activity {
             }
         });
         ImageButton button2=(ImageButton) findViewById(R.id.imageButton3);
-        button1.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent nextScreen = new Intent(getApplicationContext(), Notifications.class);
@@ -150,12 +154,67 @@ public class participatedActivities extends Activity {
         });
     }
 
-    public class listViewOnclick implements AdapterView.OnItemClickListener {
-        private listViewAdapter list;
 
-        listViewOnclick(listViewAdapter _list) {
-            list=_list;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+                break;
+            case android.R.id.home:
+                Intent i=getIntent();
+                switch (i.getStringExtra("where")) {
+                    case "activityDetail":
+                        Intent next = new Intent(getApplicationContext(), activityScreen.class);
+                        next.putExtra("where","activityDetail");
+                        next.putExtra("postID", i.getStringExtra("postID"));;
+                        next.putExtra("destinationLocation", i.getStringExtra("destinationLocation"));
+                        next.putExtra("title",i.getStringExtra("title"));
+                        next.putExtra("departureLocation", i.getStringExtra("depatureLocation"));
+                        next.putExtra("time", i.getStringExtra("time"));
+                        next.putExtra("remark",i.getStringExtra("remark"));
+                        next.putExtra("type",i.getStringExtra("type"));
+                        startActivity(next);
+                        break;
+                    case "activity":
+                        Intent next1 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next1);
+                        break;
+                    case "listView":
+                        Intent next2 = new Intent(getApplicationContext(), activityScreen.class);
+                        next2.putExtra("type",i.getStringExtra("type"));
+                        startActivity(next2);
+                        break;
+                    case "map":
+                        Intent next3 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next3);
+                        break;
+                    case "post":
+                        Intent next4 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next4);
+                        break;
+                    case "profile":
+                        Intent next5 = new Intent(getApplicationContext(), activityScreen.class);
+                        next5.putExtra("postid", i.getStringExtra("postid"));
+                        startActivity(next5);
+                        break;
+                }
+                break;
+
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public class listViewOnclick implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> adapter, View v, int position, long a){

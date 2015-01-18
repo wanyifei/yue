@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_page);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         inputName = (EditText) findViewById(R.id.welcome_button_username);
         inputPassword = (EditText) findViewById(R.id.welcome_button_password);

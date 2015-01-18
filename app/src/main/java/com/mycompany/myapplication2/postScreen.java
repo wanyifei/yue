@@ -322,6 +322,12 @@ public class postScreen extends ActionBarActivity {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 nextScreen.putExtra("user_id", MainActivity.user_id);
                 startActivity(nextScreen);
+                break;
+            case R.id.action_user:
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where","post");
+                startActivity(next);
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -343,7 +349,7 @@ public class postScreen extends ActionBarActivity {
         try {
             StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
             sb.append("?key=" + API_KEY);
-            sb.append("&components=country:uk");
+            sb.append("&components=country:us");
             sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 
             URL url = new URL(sb.toString());

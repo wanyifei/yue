@@ -19,7 +19,7 @@ public class activityScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i=getIntent();
 
@@ -51,7 +51,12 @@ public class activityScreen extends ActionBarActivity {
             case R.id.action_logout:
                 Intent nextScreen = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(nextScreen);
-
+                break;
+            case R.id.action_user:
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where","activity");
+                startActivity(next);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

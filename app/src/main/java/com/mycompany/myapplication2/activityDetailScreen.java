@@ -46,7 +46,7 @@ public class activityDetailScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Intent i = getIntent();
@@ -143,27 +143,43 @@ public class activityDetailScreen extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("Click "+item.getItemId());
         switch (item.getItemId()) {
             case R.id.action_home:
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 startActivity(nextScreen);
                 break;
-            case android.R.id.home:
-                if (type=="participated") {
-                    Intent next = new Intent(getApplicationContext(), participatedActivities.class);
-                    startActivity(next);
-                }
-                else if (type=="posted") {
-                    Intent next = new Intent(getApplicationContext(), postedActivities.class);
-                    startActivity(next);
-                }
-                else {
-                    if (type=="posted") {
-                        Intent next = new Intent(getApplicationContext(), listViewScreen.class);
-                        next.putExtra("type", type);
+            case 16908332:
+                switch (type) {
+                    case "participated" :
+                        Intent next = new Intent(getApplicationContext(), participatedActivities.class);
                         startActivity(next);
-                    }
+                        break;
+                    case "posted" :
+                        Intent next1 = new Intent(getApplicationContext(), postedActivities.class);
+                        startActivity(next1);
+                        break;
+                    default:
+                        Intent next2 = new Intent(getApplicationContext(), listViewScreen.class);
+                        next2.putExtra("type", type);
+                        startActivity(next2);
+                        break;
                 }
+
+                break;
+            case R.id.action_user:
+                Intent i = getIntent();
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where","activityDetail");
+                next.putExtra("postID", postID);;
+                next.putExtra("destinationLocation", i.getStringExtra("destinationLocation"));
+                next.putExtra("title",i.getStringExtra("title"));
+                next.putExtra("departureLocation", i.getStringExtra("depatureLocation"));
+                next.putExtra("time", String.format(i.getStringExtra("date")+"/"+i.getStringExtra("month")
+                        +"  "+i.getStringExtra("hour")+":"+i.getStringExtra("minute")));
+                next.putExtra("remark",i.getStringExtra("remark"));
+                next.putExtra("type",type);
+                startActivity(next);
                 break;
 
         }

@@ -9,7 +9,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="Welcome to Yue!" >
+            android:label="YUE" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,17 +30,21 @@
         <activity
             android:name=".activityDetailScreen"
             android:label="Details"
-            android:parentActivityName=".activityScreen"></activity>
+            ></activity>
         <activity
             android:name=".activityScreen"
             android:label="Homepage"
-            android:parentActivityName=".MainActivity"></activity>
+           ></activity>
         <activity
             android:name=".signupScreen"
             android:label="Sign Up"
             android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".Notifications"></activity>
+        <activity
+            android:name=".participatedActivities"></activity>
+        <activity
+            android:name=".postedActivities"></activity>
         <activity android:name=".profileScreen"
             android:label="Profile"
             android:parentActivityName=".activityDetailScreen">

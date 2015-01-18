@@ -53,6 +53,7 @@ public class listViewScreen extends ActionBarActivity {
 
     public static class Post {
         public int id;
+        public int fromID;
         public int date;
         public int month;
         public int hour;
@@ -93,6 +94,13 @@ public class listViewScreen extends ActionBarActivity {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 nextScreen.putExtra("user_id", MainActivity.user_id);
                 startActivity(nextScreen);
+                break;
+            case R.id.action_user:
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where","listView");
+                next.putExtra("type", type);
+                startActivity(next);
+                break;
 
         }
         return super.onOptionsItemSelected(item);

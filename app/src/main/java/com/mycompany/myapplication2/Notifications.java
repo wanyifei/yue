@@ -1,13 +1,17 @@
 package com.mycompany.myapplication2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +41,7 @@ import java.util.ArrayList;
 /**
  * Created by wangyifei on 1/16/15.
  */
-public class Notifications extends Activity {
+public class Notifications extends ActionBarActivity {
 
     ListView list;
     String[] titles;
@@ -52,6 +56,7 @@ public class Notifications extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notifications);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         InputStream is = null;
         String result = "";
@@ -91,17 +96,14 @@ public class Notifications extends Activity {
             for(int j=0;j<jArray.length();j++){
                 JSONObject json_data = jArray.getJSONObject(j);
                 listViewScreen.Post newPost = new listViewScreen.Post();
-                newPost.id = json_data.getInt("id");
-                newPost.title = json_data.getString("title");
-                newPost.destinationLocation = json_data.getString("dest_addr");
-                newPost.date = json_data.getInt("time_day");
-                newPost.month = json_data.getInt("time_month");
-                newPost.hour = json_data.getInt("time_hour");
-                newPost.minute = json_data.getInt("time_minute");
-                newPost.description = json_data.getString("description");
-                newPost.latitude = json_data.getDouble("depart_lat");
-                newPost.longitude = json_data.getDouble("depart_lgt");
-                newPost.departure=json_data.getString("depart_addr");
+                newPost.id = json_data.getInt("activity_id");
+                newPost.title = json_data.getString("activity_title");
+                newPost.fromID=json_data.getInt("sender_id");
+                newPost.description=json_data.getString("username");
+//                newPost.date = json_data.getInt("time_day");
+//                newPost.month = json_data.getInt("time_month");
+//                newPost.hour = json_data.getInt("time_hour");
+//                newPost.minute = json_data.getInt("time_minute");
                 posted.add(newPost);
             }
         }catch(JSONException e){
@@ -119,7 +121,7 @@ public class Notifications extends Activity {
         for (int i=0; i<posted.size(); i++) {
             titles[i]=posted.get(i).title;
             destinations[i]=posted.get(i).destinationLocation;
-            names[i] = posted.get(i).departure;
+            names[i] = posted.get(i).description;
             times[i]=posted.get(i).date+"/"+posted.get(i).month+" "+posted.get(i).hour+":"+posted.get(i).minute;
         }
 
@@ -128,6 +130,7 @@ public class Notifications extends Activity {
         list.setAdapter(adapter);
 
         listViewOnclick onclickEvent = new listViewOnclick();
+        System.out.print("ADDED!");
         list.setOnItemClickListener(onclickEvent);
 
         ImageButton button1=(ImageButton) findViewById(R.id.imageButton);
@@ -139,7 +142,7 @@ public class Notifications extends Activity {
             }
         });
         ImageButton button2=(ImageButton) findViewById(R.id.imageButton2);
-        button1.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent nextScreen = new Intent(getApplicationContext(), participatedActivities.class);
@@ -149,109 +152,181 @@ public class Notifications extends Activity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
+                nextScreen.putExtra("user_id", MainActivity.user_id);
+                startActivity(nextScreen);
+                break;
+            case android.R.id.home:
+                Intent i=getIntent();
+                switch (i.getStringExtra("where")) {
+                    case "activityDetail":
+                        Intent next = new Intent(getApplicationContext(), activityScreen.class);
+                        next.putExtra("where","activityDetail");
+                        next.putExtra("postID", i.getStringExtra("postID"));;
+                        next.putExtra("destinationLocation", i.getStringExtra("destinationLocation"));
+                        next.putExtra("title",i.getStringExtra("title"));
+                        next.putExtra("departureLocation", i.getStringExtra("depatureLocation"));
+                        next.putExtra("time", i.getStringExtra("time"));
+                        next.putExtra("remark",i.getStringExtra("remark"));
+                        next.putExtra("type",i.getStringExtra("type"));
+                        startActivity(next);
+                        break;
+                    case "activity":
+                        Intent next1 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next1);
+                        break;
+                    case "listView":
+                        Intent next2 = new Intent(getApplicationContext(), activityScreen.class);
+                        next2.putExtra("type",i.getStringExtra("type"));
+                        startActivity(next2);
+                        break;
+                    case "map":
+                        Intent next3 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next3);
+                        break;
+                    case "post":
+                        Intent next4 = new Intent(getApplicationContext(), activityScreen.class);
+                        startActivity(next4);
+                        break;
+                    case "profile":
+                        Intent next5 = new Intent(getApplicationContext(), activityScreen.class);
+                        next5.putExtra("postid", i.getStringExtra("postid"));
+                        startActivity(next5);
+                        break;
+                }
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     public class listViewOnclick implements AdapterView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView<?> adapter, View v, int position, long a){
+        public void onItemClick(AdapterView<?> adapter, View v, final int position, long a){
 
             final listViewScreen.Post selectPost = posted.get(position);
 
-            ImageButton accept=(ImageButton) findViewById(R.id.imageButton4);
-            accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    InputStream is = null;
-                    String result = "";
-                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
-                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
+            System.out.println(v.toString()+"  " +a);
 
-                    try{
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
-                                "/activity/agree_join");
-                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                        HttpResponse response = httpclient.execute(httppost);
-                        HttpEntity entity = response.getEntity();
-                        is = entity.getContent();
-                    }catch(Exception e){
-                        Log.e("log_tag", "Error in http connection " + e.toString());
-                    }
+            System.out.println("Listened!");
 
-                    try{
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-                        StringBuilder sb = new StringBuilder();
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line + "\n");
-                        }
-                        is.close();
-                        result=sb.toString();
-                    }catch(Exception e){
-                        Log.e("log_tag", "Error converting result "+e.toString());
-                    }
-
-                    try{
-                        JSONArray jArray = new JSONArray(result);
-                        for(int j=0;j<jArray.length();j++){
-
-                        }
-                    }catch(JSONException e){
-                        Log.e("log_tag", "Error parsing data "+e.toString());
-                    }
-
-                }
-            });
-            ImageButton decline=(ImageButton) findViewById(R.id.imageButton5);
-            decline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    InputStream is = null;
-                    String result = "";
-                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
-                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
-
-                    try{
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
-                                "/activity/decline_join");
-                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                        HttpResponse response = httpclient.execute(httppost);
-                        HttpEntity entity = response.getEntity();
-                        is = entity.getContent();
-                    }catch(Exception e){
-                        Log.e("log_tag", "Error in http connection " + e.toString());
-                    }
-
-                    try{
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-                        StringBuilder sb = new StringBuilder();
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line + "\n");
-                        }
-                        is.close();
-                        result=sb.toString();
-                    }catch(Exception e){
-                        Log.e("log_tag", "Error converting result "+e.toString());
-                    }
-
-                    try{
-                        JSONArray jArray = new JSONArray(result);
-                        for(int j=0;j<jArray.length();j++){
-
-                        }
-                    }catch(JSONException e){
-                        Log.e("log_tag", "Error parsing data "+e.toString());
-                    }
-
-                }
-            });
+//            ImageView accept=(ImageView) findViewById(R.id.imageButton4);
+//            accept.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    InputStream is = null;
+//                    String result = "";
+//                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
+//                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
+//                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
+//
+//                    try{
+//                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//                        StrictMode.setThreadPolicy(policy);
+//                        HttpClient httpclient = new DefaultHttpClient();
+//                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
+//                                "/activity/agree_join");
+//                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//                        HttpResponse response = httpclient.execute(httppost);
+//                        HttpEntity entity = response.getEntity();
+//                        is = entity.getContent();
+//                    }catch(Exception e){
+//                        Log.e("log_tag", "Error in http connection " + e.toString());
+//                    }
+//
+//                    try{
+//                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+//                        StringBuilder sb = new StringBuilder();
+//                        String line = null;
+//                        while ((line = reader.readLine()) != null) {
+//                            sb.append(line + "\n");
+//                        }
+//                        is.close();
+//                        result=sb.toString();
+//                    }catch(Exception e){
+//                        Log.e("log_tag", "Error converting result "+e.toString());
+//                    }
+//
+//                    try{
+//                        JSONArray jArray = new JSONArray(result);
+//                        for(int j=0;j<jArray.length();j++){
+//
+//                        }
+//                    }catch(JSONException e){
+//                        Log.e("log_tag", "Error parsing data "+e.toString());
+//                    }
+//
+//                    System.out.println("SEND!" + nameValuePairs.toString());
+//                    posted.remove(position);
+//
+//                }
+//            });
+//            ImageView decline=(ImageView) findViewById(R.id.imageButton5);
+//            decline.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    InputStream is = null;
+//                    String result = "";
+//                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
+//                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
+//                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
+//
+//                    try{
+//                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//                        StrictMode.setThreadPolicy(policy);
+//                        HttpClient httpclient = new DefaultHttpClient();
+//                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
+//                                "/activity/decline_join");
+//                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//                        HttpResponse response = httpclient.execute(httppost);
+//                        HttpEntity entity = response.getEntity();
+//                        is = entity.getContent();
+//                    }catch(Exception e){
+//                        Log.e("log_tag", "Error in http connection " + e.toString());
+//                    }
+//
+//                    try{
+//                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+//                        StringBuilder sb = new StringBuilder();
+//                        String line = null;
+//                        while ((line = reader.readLine()) != null) {
+//                            sb.append(line + "\n");
+//                        }
+//                        is.close();
+//                        result=sb.toString();
+//                    }catch(Exception e){
+//                        Log.e("log_tag", "Error converting result "+e.toString());
+//                    }
+//
+//                    try{
+//                        JSONArray jArray = new JSONArray(result);
+//                        for(int j=0;j<jArray.length();j++){
+//
+//                        }
+//                    }catch(JSONException e){
+//                        Log.e("log_tag", "Error parsing data "+e.toString());
+//                    }
+//
+//                    System.out.println("SEND!" + nameValuePairs.toString());
+//                    posted.remove(position);
+//
+//                }
+//            });
 
         }
     }
@@ -289,10 +364,10 @@ public class Notifications extends Activity {
             TextView myTime = (TextView) row.findViewById(R.id.list_activity_time);
 
             myImage.setImageResource(images[position]);
-            myTitle.setText(titleArray[position]);
-            myName.setText(nameArray[position]);
-            myDestination.setText(destinationArray[position]);
-            myTime.setText(timeArray[position]);
+//            myTitle.setText(titleArray[position]);
+//            myName.setText(nameArray[position]);
+//            myDestination.setText(destinationArray[position]);
+//            myTime.setText(timeArray[position]);
 
             return row;
         }

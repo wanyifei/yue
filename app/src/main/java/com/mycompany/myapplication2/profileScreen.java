@@ -38,6 +38,8 @@ import java.util.ArrayList;
  */
 public class profileScreen extends ActionBarActivity {
 
+    String id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +54,7 @@ public class profileScreen extends ActionBarActivity {
 
         Intent i = getIntent();
 
-        String id = i.getStringExtra("postid");
+        id = i.getStringExtra("postid");
 
         String result = "";
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -134,6 +136,13 @@ public class profileScreen extends ActionBarActivity {
                 Intent nextScreen = new Intent(getApplicationContext(), activityScreen.class);
                 nextScreen.putExtra("user_id", MainActivity.user_id);
                 startActivity(nextScreen);
+                break;
+            case R.id.action_user:
+                Intent next = new Intent(getApplicationContext(), Notifications.class);
+                next.putExtra("where","profile");
+                next.putExtra("postid", id);
+                startActivity(next);
+                break;
 
         }
         return super.onOptionsItemSelected(item);
