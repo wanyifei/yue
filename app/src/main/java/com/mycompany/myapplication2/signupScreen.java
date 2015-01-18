@@ -245,6 +245,7 @@ public class signupScreen extends ActionBarActivity {
                         JSONObject json_data = jArray.getJSONObject(i);
                         finish = json_data.getInt("is_successful");
                         MainActivity.user_id=json_data.getInt("current_user_id");
+                        Log.e("@@@@@@@@@@",MainActivity.user_id + "  " + result.toString());
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
