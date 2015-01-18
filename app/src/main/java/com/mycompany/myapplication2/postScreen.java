@@ -101,6 +101,7 @@ public class postScreen extends ActionBarActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 type = parent.getItemAtPosition(position).toString();
+                System.out.println("LISTENED!"+type);
             }
 
             @Override
@@ -108,6 +109,8 @@ public class postScreen extends ActionBarActivity {
 
             }
         });
+
+        System.out.println("TYPE_OUT:"+type);
 
         title = (EditText) findViewById(R.id.edit_title);
         //destination = (EditText) findViewById(R.id.edit_destination);

@@ -49,7 +49,11 @@ public class activityDetailScreen extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         Intent i = getIntent();
+
+        ImageView pic=(ImageView) findViewById(R.id.imageView2);
+        pic.setImageResource(MainActivity.user_image);
 
         TextView name = (TextView) findViewById(R.id.fill_activity_name);
         TextView destination = (TextView) findViewById(R.id.fill_activity_destination);
@@ -128,11 +132,11 @@ public class activityDetailScreen extends ActionBarActivity {
         });
 
 
-        ImageButton sendJoin = (ImageButton) findViewById(R.id.imageButton);
+        sendJoin = (ImageButton) findViewById(R.id.imageButton);
         sendJoin.setOnClickListener(new joinOnclick());
     }
 
-
+    ImageButton sendJoin;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -233,6 +237,14 @@ public class activityDetailScreen extends ActionBarActivity {
             }catch(JSONException e){
                 Log.e("log_tag", "Error parsing data "+e.toString());
             }
+
+            sendJoin.setImageResource(R.drawable.activity_detail_button_grey);
+            sendJoin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
         }
     }

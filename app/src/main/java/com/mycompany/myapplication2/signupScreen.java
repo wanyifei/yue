@@ -53,6 +53,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by wangyifei on 1/17/15.
@@ -63,6 +64,8 @@ public class signupScreen extends ActionBarActivity {
     TextView password;
     TextView phone;
     TextView email;
+
+    Menu menu;
 
     ImageButton uploadImage;
 
@@ -110,6 +113,7 @@ public class signupScreen extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu=menu;
         return true;
     }
 
@@ -245,6 +249,7 @@ public class signupScreen extends ActionBarActivity {
                         JSONObject json_data = jArray.getJSONObject(i);
                         finish = json_data.getInt("is_successful");
                         MainActivity.user_id=json_data.getInt("current_user_id");
+                        Log.e("@@@@@@@@@@",MainActivity.user_id + "  " + result.toString());
                     }
                 }catch(JSONException e){
                     Log.e("log_tag", "Error parsing data "+e.toString());
@@ -269,16 +274,20 @@ public class signupScreen extends ActionBarActivity {
             }
         });
 
-        uploadImage = (ImageButton) findViewById(R.id.signup_photo);
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                System.out.println("about ot upload");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, 1);
-            }
-        });
+//        uploadImage = (ImageButton) findViewById(R.id.signup_photo);
+//        Random random=new Random();
+//        MainActivity.user_image=MainActivity.profile_pics[random.nextInt()%10];
+//        menu.findItem(R.menu.menu_user).setIcon(MainActivity.user_image);
+//        uploadImage.setImageResource(MainActivity.user_image);
+//        uploadImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                System.out.println("about ot upload");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(intent, 1);
+//            }
+//        });
     }
 }

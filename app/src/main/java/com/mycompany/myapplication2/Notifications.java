@@ -48,6 +48,8 @@ public class Notifications extends ActionBarActivity {
     String[] names;
     String[] destinations;
     String[] times;
+    Intent i;
+    String where;
     ArrayList<listViewScreen.Post> posted = new ArrayList<>();
     int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
             R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
@@ -57,6 +59,9 @@ public class Notifications extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notifications);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        i=getIntent();
+
 
         InputStream is = null;
         String result = "";
@@ -168,10 +173,14 @@ public class Notifications extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
-                Intent i=getIntent();
+                if (i==null) {
+                    Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                    startActivity(next6);
+                }
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
-                        Intent next = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next = new Intent(getApplicationContext(), activityDetailScreen.class);
                         next.putExtra("where","activityDetail");
                         next.putExtra("postID", i.getStringExtra("postID"));;
                         next.putExtra("destinationLocation", i.getStringExtra("destinationLocation"));
@@ -187,23 +196,27 @@ public class Notifications extends ActionBarActivity {
                         startActivity(next1);
                         break;
                     case "listView":
-                        Intent next2 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next2 = new Intent(getApplicationContext(), listViewScreen.class);
                         next2.putExtra("type",i.getStringExtra("type"));
                         startActivity(next2);
                         break;
                     case "map":
-                        Intent next3 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next3 = new Intent(getApplicationContext(), mapViewScreen.class);
                         startActivity(next3);
                         break;
                     case "post":
-                        Intent next4 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next4 = new Intent(getApplicationContext(), postedActivities.class);
                         startActivity(next4);
                         break;
                     case "profile":
-                        Intent next5 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next5 = new Intent(getApplicationContext(), profileScreen.class);
                         next5.putExtra("postid", i.getStringExtra("postid"));
                         startActivity(next5);
                         break;
+                    default:
+                        Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                        startActivity(next6);
                 }
                 break;
 
@@ -223,110 +236,111 @@ public class Notifications extends ActionBarActivity {
 
             System.out.println("Listened!");
 
-//            ImageView accept=(ImageView) findViewById(R.id.imageButton4);
-//            accept.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    InputStream is = null;
-//                    String result = "";
-//                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
-//                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
-//                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
-//
-//                    try{
-//                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//                        StrictMode.setThreadPolicy(policy);
-//                        HttpClient httpclient = new DefaultHttpClient();
-//                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
-//                                "/activity/agree_join");
-//                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//                        HttpResponse response = httpclient.execute(httppost);
-//                        HttpEntity entity = response.getEntity();
-//                        is = entity.getContent();
-//                    }catch(Exception e){
-//                        Log.e("log_tag", "Error in http connection " + e.toString());
-//                    }
-//
-//                    try{
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-//                        StringBuilder sb = new StringBuilder();
-//                        String line = null;
-//                        while ((line = reader.readLine()) != null) {
-//                            sb.append(line + "\n");
-//                        }
-//                        is.close();
-//                        result=sb.toString();
-//                    }catch(Exception e){
-//                        Log.e("log_tag", "Error converting result "+e.toString());
-//                    }
-//
-//                    try{
-//                        JSONArray jArray = new JSONArray(result);
-//                        for(int j=0;j<jArray.length();j++){
-//
-//                        }
-//                    }catch(JSONException e){
-//                        Log.e("log_tag", "Error parsing data "+e.toString());
-//                    }
-//
-//                    System.out.println("SEND!" + nameValuePairs.toString());
-//                    posted.remove(position);
-//
-//                }
-//            });
-//            ImageView decline=(ImageView) findViewById(R.id.imageButton5);
-//            decline.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    InputStream is = null;
-//                    String result = "";
-//                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
-//                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
-//                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
-//
-//                    try{
-//                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//                        StrictMode.setThreadPolicy(policy);
-//                        HttpClient httpclient = new DefaultHttpClient();
-//                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
-//                                "/activity/decline_join");
-//                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//                        HttpResponse response = httpclient.execute(httppost);
-//                        HttpEntity entity = response.getEntity();
-//                        is = entity.getContent();
-//                    }catch(Exception e){
-//                        Log.e("log_tag", "Error in http connection " + e.toString());
-//                    }
-//
-//                    try{
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-//                        StringBuilder sb = new StringBuilder();
-//                        String line = null;
-//                        while ((line = reader.readLine()) != null) {
-//                            sb.append(line + "\n");
-//                        }
-//                        is.close();
-//                        result=sb.toString();
-//                    }catch(Exception e){
-//                        Log.e("log_tag", "Error converting result "+e.toString());
-//                    }
-//
-//                    try{
-//                        JSONArray jArray = new JSONArray(result);
-//                        for(int j=0;j<jArray.length();j++){
-//
-//                        }
-//                    }catch(JSONException e){
-//                        Log.e("log_tag", "Error parsing data "+e.toString());
-//                    }
-//
-//                    System.out.println("SEND!" + nameValuePairs.toString());
-//                    posted.remove(position);
-//
-//                }
-//            });
+            ImageView accept=(ImageView) findViewById(R.id.imageButton4);
+            accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InputStream is = null;
+                    String result = "";
+                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
+                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
+                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
+
+                    try{
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
+                                "/activity/agree_join");
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                        HttpResponse response = httpclient.execute(httppost);
+                        HttpEntity entity = response.getEntity();
+                        is = entity.getContent();
+                    }catch(Exception e){
+                        Log.e("log_tag", "Error in http connection " + e.toString());
+                    }
+
+                    try{
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                        StringBuilder sb = new StringBuilder();
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line + "\n");
+                        }
+                        is.close();
+                        result=sb.toString();
+                    }catch(Exception e){
+                        Log.e("log_tag", "Error converting result "+e.toString());
+                    }
+
+                    try{
+                        JSONArray jArray = new JSONArray(result);
+                        for(int j=0;j<jArray.length();j++){
+
+                        }
+                    }catch(JSONException e){
+                        Log.e("log_tag", "Error parsing data "+e.toString());
+                    }
+
+                    System.out.println("ACCEPT "+nameValuePairs.toString());
+                    Intent nextScreen = new Intent(getApplicationContext(), Notifications.class);
+                    startActivity(nextScreen);
+                }
+            });
+            ImageView decline=(ImageView) findViewById(R.id.imageButton5);
+            decline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InputStream is = null;
+                    String result = "";
+                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                    nameValuePairs.add(new BasicNameValuePair("current_user_id", Integer.toString(MainActivity.user_id)));
+                    nameValuePairs.add(new BasicNameValuePair("activity_id", Integer.toString(selectPost.id)));
+                    nameValuePairs.add(new BasicNameValuePair("sender_id", Integer.toString(selectPost.fromID)));
+
+                    try{
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPost httppost = new HttpPost("http://ec2-54-165-39-217.compute-1.amazonaws.com/Hangout/index.php" +
+                                "/activity/decline_join");
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                        HttpResponse response = httpclient.execute(httppost);
+                        HttpEntity entity = response.getEntity();
+                        is = entity.getContent();
+                    }catch(Exception e){
+                        Log.e("log_tag", "Error in http connection " + e.toString());
+                    }
+
+                    try{
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                        StringBuilder sb = new StringBuilder();
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line + "\n");
+                        }
+                        is.close();
+                        result=sb.toString();
+                    }catch(Exception e){
+                        Log.e("log_tag", "Error converting result "+e.toString());
+                    }
+
+                    try{
+                        JSONArray jArray = new JSONArray(result);
+                        for(int j=0;j<jArray.length();j++){
+
+                        }
+                    }catch(JSONException e){
+                        Log.e("log_tag", "Error parsing data "+e.toString());
+                    }
+
+                    System.out.println("DECLINE "+nameValuePairs.toString());
+                    Intent nextScreen = new Intent(getApplicationContext(), Notifications.class);
+                    startActivity(nextScreen);
+
+                }
+            });
 
         }
     }
@@ -364,10 +378,10 @@ public class Notifications extends ActionBarActivity {
             TextView myTime = (TextView) row.findViewById(R.id.list_activity_time);
 
             myImage.setImageResource(images[position]);
-//            myTitle.setText(titleArray[position]);
-//            myName.setText(nameArray[position]);
-//            myDestination.setText(destinationArray[position]);
-//            myTime.setText(timeArray[position]);
+            myTitle.setText(titleArray[position]);
+            myName.setText(nameArray[position]);
+            myDestination.setText(destinationArray[position]);
+            myTime.setText(timeArray[position]);
 
             return row;
         }

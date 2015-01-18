@@ -46,6 +46,8 @@ public class profileScreen extends ActionBarActivity {
         setContentView(R.layout.profile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ImageView pic=(ImageView) findViewById(R.id.profile_id_photo);
+        pic.setImageResource(MainActivity.user_image);
 
         TextView username = (TextView) findViewById(R.id.profile_username);
         TextView phone = (TextView) findViewById(R.id.profile_phone);

@@ -52,11 +52,14 @@ public class postedActivities extends ActionBarActivity {
     int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
             R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
             R.drawable.img_thing, R.drawable.weenie};
+    Intent i;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.posted_activities);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        i=getIntent();
 
         InputStream is = null;
         String result = "";
@@ -124,7 +127,7 @@ public class postedActivities extends ActionBarActivity {
         for (int i=0; i<posted.size(); i++) {
             titles[i]=posted.get(i).title;
             destinations[i]=posted.get(i).destinationLocation;
-            names[i] = posted.get(i).departure;
+            //names[i] = posted.get(i).departure;
             times[i]=posted.get(i).date+"/"+posted.get(i).month+" "+posted.get(i).hour+":"+posted.get(i).minute;
         }
 
@@ -170,10 +173,14 @@ public class postedActivities extends ActionBarActivity {
                 startActivity(nextScreen);
                 break;
             case android.R.id.home:
-                Intent i=getIntent();
+                if (i==null) {
+                    Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                    startActivity(next6);
+                }
                 switch (i.getStringExtra("where")) {
                     case "activityDetail":
-                        Intent next = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next = new Intent(getApplicationContext(), activityDetailScreen.class);
                         next.putExtra("where","activityDetail");
                         next.putExtra("postID", i.getStringExtra("postID"));;
                         next.putExtra("destinationLocation", i.getStringExtra("destinationLocation"));
@@ -189,23 +196,27 @@ public class postedActivities extends ActionBarActivity {
                         startActivity(next1);
                         break;
                     case "listView":
-                        Intent next2 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next2 = new Intent(getApplicationContext(), listViewScreen.class);
                         next2.putExtra("type",i.getStringExtra("type"));
                         startActivity(next2);
                         break;
                     case "map":
-                        Intent next3 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next3 = new Intent(getApplicationContext(), mapViewScreen.class);
                         startActivity(next3);
                         break;
                     case "post":
-                        Intent next4 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next4 = new Intent(getApplicationContext(), postedActivities.class);
                         startActivity(next4);
                         break;
                     case "profile":
-                        Intent next5 = new Intent(getApplicationContext(), activityScreen.class);
+                        Intent next5 = new Intent(getApplicationContext(), profileScreen.class);
                         next5.putExtra("postid", i.getStringExtra("postid"));
                         startActivity(next5);
                         break;
+                    default:
+                        Intent next6 = new Intent(getApplicationContext(), activityScreen.class);
+
+                        startActivity(next6);
                 }
                 break;
 

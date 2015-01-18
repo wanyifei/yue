@@ -42,9 +42,11 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wangyifei on 1/16/15.
@@ -70,9 +72,7 @@ public class listViewScreen extends ActionBarActivity {
     String[] names;
     String[] destinations;
     String[] times;
-    int[] profile_pics = {R.drawable.cute_lion_cartoon, R.drawable.dig10k_heart, R.drawable.dig10k_maples,
-            R.drawable.dig10k_moon, R.drawable.flower, R.drawable.hepburn, R.drawable.moon, R.drawable.penguin,
-            R.drawable.img_thing, R.drawable.weenie};
+
 
 
     LocationManager locationManager;
@@ -145,6 +145,8 @@ public class listViewScreen extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_screen);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         posts.clear();
 
@@ -220,7 +222,7 @@ public class listViewScreen extends ActionBarActivity {
         });
 
         list = (ListView) findViewById(R.id.listView);
-        listViewAdapter adapter = new listViewAdapter(this, titles, profile_pics, names,destinations,times);
+        listViewAdapter adapter = new listViewAdapter(this, titles, MainActivity.profile_pics, names,destinations,times);
         list.setAdapter(adapter);
 
         listViewOnclick onclickEvent = new listViewOnclick();
